@@ -13,9 +13,12 @@ struct ContentView: View {
     let context = GameContext(dependencies: .init())
 
     var body: some View {
+        ZStack {
         SpriteView(scene: context.scene!, debugOptions: [])
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-            .edgesIgnoringSafeArea(.all)
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                .edgesIgnoringSafeArea(.all)
+        }
+        .statusBarHidden()
     }
 }
 
