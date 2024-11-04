@@ -8,102 +8,154 @@
 import SpriteKit
 import GameplayKit
 
+enum TileType: String {
+    case counter = "Counter"
+    case machine = "Machine"
+    case floor = "Floor"
+    case table = "Table"
+    case sink = "Sink"
+}
+
 class GameScene: SKScene {
     
-    var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
-    
-    private var lastUpdateTime : TimeInterval = 0
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    
-    override func sceneDidLoad() {
-
-        self.lastUpdateTime = 0
+    var tileMap: SKTileMapNode?
+    var draggedFood: Food?
+    var foodOnTile: [CGPoint: Food] = [:]
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
+        override func didMove(to view: SKView) {
+            setupTileMap()
+            setupFoodSource()
         }
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        func setupTileMap() {
+            let tileSize = CGSize(width: 64, height: 64)
+            let columns = 10
+            let rows = 20
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
+            let tileSet = createBasicTileSet()
+
+            tileMap = SKTileMapNode(tileSet: tileSet, columns: columns, rows: rows, tileSize: tileSize)
+            
+            if let tileMap = tileMap {
+                let mapWidth = CGFloat(columns) * tileSize.width
+                let mapHeight = CGFloat(rows) * tileSize.height
+                let xScale = frame.width / mapWidth
+                let yScale = frame.height / mapHeight
+                let scale = min(xScale, yScale)
+                tileMap.setScale(scale)
+                tileMap.position = CGPoint(x: frame.midX, y: frame.midY)
+                tileMap.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+                addChild(tileMap)
+
+                fillTileMap(with: .floor)
+                setTile(at: (5, 5), tileType: .counter)
+                setTile(at: (5, 6), tileType: .machine)
+                setTile(at: (5, 7), tileType: .sink)
+                setTile(at: (7, 9), tileType: .table)
+            }
         }
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
+        
+        func fillTileMap(with defaultTileType: TileType) {
+            guard let tileMap = tileMap else { return }
+            
+            for column in 0..<tileMap.numberOfColumns {
+                for row in 0..<tileMap.numberOfRows {
+                    setTile(at: (column, row), tileType: defaultTileType)
+                }
+            }
         }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
+        
+        func setTile(at position: (Int, Int), tileType: TileType) {
+            guard let tileMap = tileMap else { return }
+            
+            if let tileGroup = tileMap.tileSet.tileGroups.first(where: { $0.name == tileType.rawValue }) {
+                tileMap.setTileGroup(tileGroup, forColumn: position.0, row: position.1)
+            }
         }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
+        
+        func createBasicTileSet() -> SKTileSet {
+            let colors: [TileType: UIColor] = [
+                .floor: .lightGray,
+                .counter: .gray,
+                .machine: .darkGray,
+                .sink: .blue,
+                .table: .brown,
+                
+            ]
+            
+            var tileGroups = [SKTileGroup]()
+            
+            for (tileType, color) in colors {
+                let colorNode = SKSpriteNode(color: color, size: CGSize(width: 64, height: 64))
+                let texture = SKView().texture(from: colorNode)
+                let tileDefinition = SKTileDefinition(texture: texture!, size: CGSize(width: 64, height: 64))
+                tileDefinition.userData = ["color": color]
+                
+                let tileGroup = SKTileGroup(tileDefinition: tileDefinition)
+                tileGroup.name = tileType.rawValue
+                tileGroups.append(tileGroup)
+            }
+            
+            return SKTileSet(tileGroups: tileGroups)
         }
-    }
-    
+    func setupFoodSource() {
+            let sourceNode = SKShapeNode(circleOfRadius: 20)
+            sourceNode.position = CGPoint(x: 100, y: 100)
+            sourceNode.fillColor = .green
+            sourceNode.name = "FoodSource"
+            addChild(sourceNode)
+        }
+        
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+            guard let touch = touches.first else { return }
+            let location = touch.location(in: self)
+            
+            if atPoint(location).name == "FoodSource" {
+                draggedFood = Food(name: "Ingredient", size: CGSize(width: 32, height: 32))
+                if let draggedFood = draggedFood {
+                    draggedFood.position = location
+                    addChild(draggedFood)
+                }
+            } else if let tileMap = tileMap {
+                let column = tileMap.tileColumnIndex(fromPosition: location)
+                let row = tileMap.tileRowIndex(fromPosition: location)
+                let tilePosition = CGPoint(x: column, y: row)
+                if let food = foodOnTile[tilePosition] {
+                    draggedFood = food
+                    foodOnTile[tilePosition] = nil
+                }
+            }
         }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
+        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+            guard let touch = touches.first, let draggedFood = draggedFood else { return }
+            let location = touch.location(in: self)
+            draggedFood.position = location
+        }
+        
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
+        guard let touch = touches.first, let draggedFood = draggedFood else { return }
+                let location = touch.location(in: self)
+                
+                if let tileMap = tileMap {
+                    let column = tileMap.tileColumnIndex(fromPosition: location)
+                    let row = tileMap.tileRowIndex(fromPosition: location)
+                    let tilePosition = CGPoint(x: column, y: row)
+
+                    if let tileGroup = tileMap.tileGroup(atColumn: column, row: row),
+                       
+                       tileGroup.name == TileType.counter.rawValue ||
+                       tileGroup.name == TileType.machine.rawValue ||
+                       tileGroup.name == TileType.sink.rawValue ||
+                       tileGroup.name == TileType.table.rawValue {
+                        draggedFood.position = tileMap.centerOfTile(atColumn: column, row: row)
+                        foodOnTile[tilePosition] = draggedFood
+                    } else {
+                        
+                        draggedFood.removeFromParent()
+                    }
+                }
+            
+            self.draggedFood = nil
         }
-        
-        // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        for entity in self.entities {
-            entity.update(deltaTime: dt)
-        }
-        
-        self.lastUpdateTime = currentTime
-    }
 }
