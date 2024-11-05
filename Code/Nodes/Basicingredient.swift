@@ -6,6 +6,9 @@
 //
 import SpriteKit
 
+let steakProgression = ["Steak", "SteakRare", "SteakMedium", "SteakBurnt"]
+fileprivate var iterate: Int = 0
+
 class Food: SKSpriteNode {
     var foodName: String
     var isIngredient: Bool
@@ -16,14 +19,13 @@ class Food: SKSpriteNode {
         self.isIngredient = isIngredient
         self.isFinalProduct = isFinalProduct
         
-        
-        let circlePath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: size))
-        let shapeNode = SKShapeNode(path: circlePath.cgPath)
-        shapeNode.fillColor = .green
-        shapeNode.lineWidth = 0
+//        let circlePath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: size))
+//        let shapeNode = SKShapeNode(path: circlePath.cgPath)
+//        shapeNode.fillColor = .green
+//        shapeNode.lineWidth = 0
 
-        
-        let texture = SKView().texture(from: shapeNode)!
+        let texture = SKTexture(imageNamed: steakProgression[iterate % steakProgression.count])
+        iterate += 1
         
         super.init(texture: texture, color: .clear, size: size)
     }

@@ -32,26 +32,19 @@ enum TileType: String, CaseIterable {
 }
 
 class GameScene: SKScene {
-    var tileMap: RestaurantTileMap = RestaurantTileMap(columns: 10, rows: 10, frame: UIScreen.main.bounds)
+//    var tileMap: RestaurantTileMap = RestaurantTileMap(columns: 10, rows: 10, frame: UIScreen.main.bounds)
     var draggedFood: Food?
     var foodOnTile: [CGPoint: Food] = [:]
+    
+    var tileMap: SKTileMapNode!
     
     private let columns = 10
     private let rows = 10
     
-//    override func didMove(to view: SKView) {
-////        addChild(tileMap)
-////        tileMap.position = CGPoint(x: frame.midX, y: frame.midY)
-//        
-////        setupFoodSource()
-//    }
-    
-    func setupFoodSource() {
-        let sourceNode = SKShapeNode(circleOfRadius: 20)
-        sourceNode.position = CGPoint(x: 100, y: 100)
-        sourceNode.fillColor = .green
-        sourceNode.name = "FoodSource"
-        addChild(sourceNode)
+    override func sceneDidLoad() {
+        super.sceneDidLoad()
+        
+        tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -100,6 +93,7 @@ class GameScene: SKScene {
             draggedFood.removeFromParent()
             tileMap.addChild(draggedFood)
             draggedFood.position = positionInTileMap
+            draggedFood.scale(to: CGSize(width: 100, height: 100))
             foodOnTile[tilePosition] = draggedFood
         } else {
             
