@@ -37,7 +37,6 @@ class GameContext {
 
     init(dependencies deps: Dependencies) {
         dependencies = deps
-        scene = GameScene(size: UIScreen.main.bounds.size)
     }
     
     func exit() {

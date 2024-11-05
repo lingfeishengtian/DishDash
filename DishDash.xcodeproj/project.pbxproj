@@ -18,6 +18,9 @@
 		96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1682CD97FAA004F914F /* Dependencies.swift */; };
 		96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC16A2CD97FAA004F914F /* GameModeType.swift */; };
 		96DEC1762CD981D4004F914F /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC16B2CD97FAA004F914F /* GameType.swift */; };
+		96DEC1842CD9AF4C004F914F /* RestaurantTileMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1832CD9AF4C004F914F /* RestaurantTileMap.swift */; };
+		96DEC1872CD9B64F004F914F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1852CD9B64F004F914F /* Assets.xcassets */; };
+		96DEC1882CD9B64F004F914F /* RestaurantTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1862CD9B64F004F914F /* RestaurantTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,9 @@
 		96DEC1692CD97FAA004F914F /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
 		96DEC16A2CD97FAA004F914F /* GameModeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeType.swift; sourceTree = "<group>"; };
 		96DEC16B2CD97FAA004F914F /* GameType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
+		96DEC1832CD9AF4C004F914F /* RestaurantTileMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantTileMap.swift; sourceTree = "<group>"; };
+		96DEC1852CD9B64F004F914F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		96DEC1862CD9B64F004F914F /* RestaurantTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = RestaurantTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -150,10 +156,13 @@
 				96DEC16F2CD98096004F914F /* Nodes */,
 				96DEC1482CD97E98004F914F /* Actions.sks */,
 				96DEC14B2CD97E98004F914F /* GameScene.sks */,
+				96DEC1862CD9B64F004F914F /* RestaurantTileSet.sks */,
 				96DEC14C2CD97E98004F914F /* GameScene.swift */,
 				96DEC14D2CD97E98004F914F /* GameViewController.swift */,
 				96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */,
 				96DEC14F2CD97E98004F914F /* Main.storyboard */,
+				96DEC1832CD9AF4C004F914F /* RestaurantTileMap.swift */,
+				96DEC1852CD9B64F004F914F /* Assets.xcassets */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -284,6 +293,8 @@
 				96DEC1542CD97E98004F914F /* GameScene.sks in Resources */,
 				96DEC1552CD97E98004F914F /* LaunchScreen.storyboard in Resources */,
 				96DEC1562CD97E98004F914F /* Main.storyboard in Resources */,
+				96DEC1872CD9B64F004F914F /* Assets.xcassets in Resources */,
+				96DEC1882CD9B64F004F914F /* RestaurantTileSet.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +324,7 @@
 				96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */,
 				96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */,
 				96DEC1762CD981D4004F914F /* GameType.swift in Sources */,
+				96DEC1842CD9AF4C004F914F /* RestaurantTileMap.swift in Sources */,
 				96DEC1592CD97E98004F914F /* GameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-        SpriteView(scene: context.scene!, debugOptions: [])
+            SpriteView(scene: GKScene(fileNamed: "GameScene")?.rootNode as! GameScene, debugOptions: [])
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                 .edgesIgnoringSafeArea(.all)
         }
