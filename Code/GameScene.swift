@@ -75,31 +75,44 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first, let draggedFood = draggedFood else { return }
-        let location = touch.location(in: self)
-        
-        let positionInTileMap = touch.location(in: tileMap)
-        let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
-        let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
-        let tilePosition = CGPoint(x: column, y: row)
-        
-        if let tileGroup = tileMap.tileGroup(atColumn: column, row: row),
-           
-            tileGroup.name == TileType.counter.rawValue ||
-            tileGroup.name == TileType.machine.rawValue ||
-            tileGroup.name == TileType.sink.rawValue ||
-            tileGroup.name == TileType.table.rawValue {
-            let positionInTileMap = tileMap.centerOfTile(atColumn: column, row: row)
-            draggedFood.removeFromParent()
-            tileMap.addChild(draggedFood)
-            draggedFood.position = positionInTileMap
-            draggedFood.scale(to: CGSize(width: 100, height: 100))
-            foodOnTile[tilePosition] = draggedFood
-        } else {
+            guard let touch = touches.first, let draggedFood = draggedFood else { return }
+            let positionInTileMap = touch.location(in: tileMap)
+            let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
+            let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
+            let tilePosition = CGPoint(x: column, y: row)
             
-            draggedFood.removeFromParent()
+            if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
+                if tileGroup.name == TileType.machine.rawValue {
+                    placeFoodOnMachineTile(draggedFood, at: tilePosition)
+                } else if tileGroup.name == TileType.counter.rawValue ||
+                            tileGroup.name == TileType.sink.rawValue ||
+                            tileGroup.name == TileType.table.rawValue {
+                    placeFoodOnNonMachineTile(draggedFood, at: tilePosition)
+                } else {
+                    draggedFood.removeFromParent()
+                }
+            }
+            
+            self.draggedFood = nil
         }
         
-        self.draggedFood = nil
+        private func placeFoodOnMachineTile(_ food: Food, at tilePosition: CGPoint) {
+            let positionInTileMap = tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y))
+            food.removeFromParent()
+            tileMap.addChild(food)
+            food.position = positionInTileMap
+            food.scale(to: CGSize(width: 100, height: 100))
+            foodOnTile[tilePosition] = food
+            food.startCooking()
+        }
+        
+        private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: CGPoint) {
+            let positionInTileMap = tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y))
+            food.removeFromParent()
+            tileMap.addChild(food)
+            food.position = positionInTileMap
+            food.scale(to: CGSize(width: 100, height: 100))
+            foodOnTile[tilePosition] = food
+            food.stopCooking() 
+        }
     }
-}
