@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		968BAE4C2CDC3D4B00DBFCB2 /* DishDashGameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */; };
 		96DEC1522CD97E98004F914F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1482CD97E98004F914F /* Actions.sks */; };
 		96DEC1532CD97E98004F914F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14A2CD97E98004F914F /* Assets.xcassets */; };
 		96DEC1542CD97E98004F914F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14B2CD97E98004F914F /* GameScene.sks */; };
@@ -43,6 +44,7 @@
 		963774762CBE305A00FFFCBA /* DishDash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DishDash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9637748F2CBE305B00FFFCBA /* DishDashTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DishDashTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		963774992CBE305B00FFFCBA /* DishDashUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DishDashUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishDashGameContext.swift; sourceTree = "<group>"; };
 		96DEC1482CD97E98004F914F /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		96DEC14A2CD97E98004F914F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96DEC14B2CD97E98004F914F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				96DEC14D2CD97E98004F914F /* GameViewController.swift */,
 				96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */,
 				96DEC14F2CD97E98004F914F /* Main.storyboard */,
+				968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96DEC1582CD97E98004F914F /* GameScene.swift in Sources */,
+				968BAE4C2CDC3D4B00DBFCB2 /* DishDashGameContext.swift in Sources */,
 				96DEC1732CD981D4004F914F /* GameContext.swift in Sources */,
 				96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */,
 				96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */,

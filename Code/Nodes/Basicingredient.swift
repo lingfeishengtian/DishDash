@@ -31,10 +31,10 @@ class Food: SKSpriteNode {
         }
         
         func startCooking() {
-
-            cookingStage = 0
-            cookingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
-                self?.advanceCookingStage()
+            if cookingStage < steakProgression.count - 1 {
+                cookingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+                    self?.advanceCookingStage()
+                }
             }
         }
         

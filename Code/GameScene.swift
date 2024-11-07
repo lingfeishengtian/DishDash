@@ -49,7 +49,7 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
+        var location = touch.location(in: self)
         
         if atPoint(location).name == "FoodSource" {
             draggedFood = Food(name: "Ingredient", size: CGSize(width: 32, height: 32))
@@ -58,10 +58,14 @@ class GameScene: SKScene {
                 addChild(draggedFood)
             }
         } else {
+            location = touch.location(in: tileMap)
             let column = tileMap.tileColumnIndex(fromPosition: location)
             let row = tileMap.tileRowIndex(fromPosition: location)
             let tilePosition = CGPoint(x: column, y: row)
             if let food = foodOnTile[tilePosition] {
+                location = touch.location(in: self)
+                food.position = location
+                food.stopCooking()
                 draggedFood = food
                 foodOnTile[tilePosition] = nil
             }
@@ -97,21 +101,21 @@ class GameScene: SKScene {
         }
         
         private func placeFoodOnMachineTile(_ food: Food, at tilePosition: CGPoint) {
-            let positionInTileMap = tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y))
+            let positionInTileMap = tileMap.convert(tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y)), to: self)
             food.removeFromParent()
-            tileMap.addChild(food)
+            self.addChild(food)
             food.position = positionInTileMap
-            food.scale(to: CGSize(width: 100, height: 100))
+            food.scale(to: CGSize(width: 50, height: 50))
             foodOnTile[tilePosition] = food
             food.startCooking()
         }
         
         private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: CGPoint) {
-            let positionInTileMap = tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y))
+            let positionInTileMap = tileMap.convert(tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y)), to: self)
             food.removeFromParent()
-            tileMap.addChild(food)
+            self.addChild(food)
             food.position = positionInTileMap
-            food.scale(to: CGSize(width: 100, height: 100))
+            food.scale(to: CGSize(width: 50, height: 50))
             foodOnTile[tilePosition] = food
             food.stopCooking() 
         }
