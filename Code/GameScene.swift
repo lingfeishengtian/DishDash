@@ -84,6 +84,7 @@ class GameScene: SKScene {
     }
     
     private var queuedCustomersOutside: [Customer] = []
+    /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor private var customersAtTables: [Customer] = []
     func addCustomer() {
         let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 10, size: CGSize(width: 50, height: 50)) {
@@ -110,10 +111,6 @@ class GameScene: SKScene {
     func removeCustomer(_ customer: Customer) {
         customersAtTables.removeAll { $0 == customer }
         customer.removeFromParent()
-        
-        if let tablePosition = customer.tableSittingAt {
-            currentTablePositionReserved.removeAll { $0 == tablePosition }
-        }
     }
     
     // TODO: Implement loseGame
@@ -122,15 +119,12 @@ class GameScene: SKScene {
         fatalError()
     }
     
-    private var currentTablePositionReserved: [TilePoint] = []
     /// Reserves a table at a TilePoint (sets the customer's table to this tile point) and returns the coordinates that customer should "sit" at
     func reserveTable(for customer: Customer) -> CGPoint? {
-        let positions = getPositionsOfTileGroup(named: TileType.table.rawValue)
+        let positions = getPositionsOfTileGroup(for: TileType.table)
         
         for tablePosition in positions {
-            if !currentTablePositionReserved.contains(where: { $0 == tablePosition }) {
-                currentTablePositionReserved.append(tablePosition)
-                
+            if !customersAtTables.contains(where: { $0.tableSittingAt == tablePosition }) {
                 customer.tableSittingAt = tablePosition
                 
                 // TODO: Handle table positioning code (x - 1) is a placeholder
@@ -142,12 +136,12 @@ class GameScene: SKScene {
     }
     
     /// Get all available positions of a tile group
-    func getPositionsOfTileGroup(named tileGroupName: String) -> [TilePoint] {
+    func getPositionsOfTileGroup(for tileType: TileType) -> [TilePoint] {
         var tablePositions: [TilePoint] = []
         
         for column in 0..<tileMap.numberOfColumns {
             for row in 0..<tileMap.numberOfRows {
-                if let tileGroup = tileMap.tileGroup(atColumn: column, row: row)?.name, tileGroup == tileGroupName {
+                if let tileGroup = tileMap.tileGroup(atColumn: column, row: row)?.name, tileGroup == tileType.rawValue {
                     tablePositions.append(TilePoint(x: column, y: row))
                 }
             }
@@ -205,16 +199,6 @@ class GameScene: SKScene {
             default:
                 draggedFood.removeFromParent()
             }
-            
-//            if tileGroup.name == TileType.machine.rawValue {
-//                placeFoodOnMachineTile(draggedFood, at: tilePosition)
-//            } else if tileGroup.name == TileType.counter.rawValue ||
-//                        tileGroup.name == TileType.sink.rawValue ||
-//                        tileGroup.name == TileType.table.rawValue {
-//                placeFoodOnNonMachineTile(draggedFood, at: tilePosition)
-//            } else {
-//                draggedFood.removeFromParent()
-//            }
         }
         
         self.draggedFood = nil
@@ -227,6 +211,7 @@ class GameScene: SKScene {
         food.position = positionInTileMap
         food.scale(to: CGSize(width: 50, height: 50))
         foodOnTile[tilePosition] = food
+        food.stopCooking()
     }
     
     private func placeFoodOnMachineTile(_ food: Food, at tilePosition: CGPoint) {
@@ -236,7 +221,6 @@ class GameScene: SKScene {
     
     private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: CGPoint) {
         setFoodItemDown(food, at: tilePosition)
-        food.stopCooking()
     }
     
     private func eventItemPlacedOnTable(_ food: Food, at tilePosition: CGPoint) {

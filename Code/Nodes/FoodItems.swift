@@ -10,6 +10,24 @@
 //
 import Foundation
 
+struct OrderableFoodRandomSelectionOptions: OptionSet {
+    let rawValue: Int
+    
+    static let steak = OrderableFoodRandomSelectionOptions(rawValue: 1 << 0)
+    static let sushi = OrderableFoodRandomSelectionOptions(rawValue: 1 << 1)
+    
+    static let all = [steak, sushi]
+    
+    func idRange() -> ClosedRange<Int> {
+        switch self {
+        case .steak:
+            return 0...2
+        default:
+            return 0...999
+        }
+    }
+}
+
 enum FoodItem: Int, CaseIterable {
     /// Orderable Items have IDs < 1000
     case SteakRare = 0
@@ -52,10 +70,10 @@ enum FoodItem: Int, CaseIterable {
         }
     }
     
-    static func randomOrderableItem() -> FoodItem {
+    static func randomOrderableItem(options: OrderableFoodRandomSelectionOptions = .steak) -> FoodItem {
         var orderableItems = [FoodItem]()
         
-        for item in FoodItem.allCases where item.rawValue < 1000 {
+        for item in FoodItem.allCases where item.rawValue < 1000 && options.idRange().contains(item.rawValue) {
             orderableItems.append(item)
         }
         
