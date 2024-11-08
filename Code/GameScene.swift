@@ -43,7 +43,6 @@ class GameScene: SKScene {
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
-        
         tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
     }
     
