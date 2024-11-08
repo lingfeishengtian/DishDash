@@ -50,8 +50,8 @@ class GameScene: SKScene {
     
     var tileMap: SKTileMapNode!
     
-    var score: Int = 0
-    var scoreLabel: SKLabelNode!
+    //var score: Int = 0
+    //var scoreLabel: SKLabelNode!
     var customers: [Customer] = []
     var tablePositions: [CGPoint] = []
     
@@ -61,16 +61,27 @@ class GameScene: SKScene {
     private let rows = 10
     
     private let baseCustomerSpawnRate: Int = 10
+    var scoreLabel: SKLabelNode!
+        var score: Int = 0 {
+            didSet {
+                scoreLabel.text = "Score: \(score)"
+            }
+        }
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
         tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
-        
+        setupScoreLabel()
         customerGeneratorTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(baseCustomerSpawnRate), repeats: false) { [weak self] _ in
             print("Resrving table")
             self?.addCustomer()
         }
     }
+    //lol i cant get it in view without this, figure this out later
+    override func didMove(to view: SKView) {
+            super.didMove(to: view)
+            setupScoreLabel()
+        }
     
     private var customersSinceStart: Int = 0
     /// Reduce seconds linearly from 10 to 5 based on customers since start
@@ -87,7 +98,7 @@ class GameScene: SKScene {
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor private var customersAtTables: [Customer] = []
     func addCustomer() {
-        let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 10, size: CGSize(width: 50, height: 50)) {
+        let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 20, size: CGSize(width: 50, height: 50)) {
             print("Customer left")
             self.loseGame()
         }
@@ -115,10 +126,36 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-        print("You lost!")
-        fatalError()
+//        print("You lost!")
+//        fatalError()
+        customerGeneratorTimer?.invalidate()
+        customerGeneratorTimer = nil
+        self.removeAllActions()
+        self.removeAllChildren()
+        showLosingScreen()
     }
-    
+    private func showLosingScreen() {
+        let background = SKShapeNode(rect: self.frame)
+        background.fillColor = UIColor.black.withAlphaComponent(0.75)
+        background.zPosition = 10
+                
+                // Game Over
+        let gameOverLabel = SKLabelNode(text: "Game Over")
+        gameOverLabel.fontSize = 40
+        gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
+        gameOverLabel.zPosition = 11
+                
+                // Restart button
+        let restartButton = SKLabelNode(text: "Restart")
+        restartButton.fontSize = 30
+        restartButton.name = "RestartButton"
+        restartButton.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        restartButton.zPosition = 11
+
+        background.addChild(gameOverLabel)
+        background.addChild(restartButton)
+        self.addChild(background)
+        }
     /// Reserves a table at a TilePoint (sets the customer's table to this tile point) and returns the coordinates that customer should "sit" at
     func reserveTable(for customer: Customer) -> CGPoint? {
         let positions = getPositionsOfTileGroup(for: TileType.table)
@@ -153,6 +190,7 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         var location = touch.location(in: self)
+        //let node = atPoint(location)
         
         if atPoint(location).name == "FoodSource" {
             draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
@@ -173,6 +211,9 @@ class GameScene: SKScene {
                 foodOnTile[tilePosition] = nil
             }
         }
+        if let node = self.nodes(at: location).first, node.name == "restartButton" {
+            restartGame()
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -187,7 +228,10 @@ class GameScene: SKScene {
         let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
         let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
         let tilePosition = CGPoint(x: column, y: row)
-        
+        //let location = touch.location(in: self)
+        //let node = atPoint(location)
+
+       
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
             switch tileGroup.name {
             case TileType.machine.rawValue:
@@ -232,10 +276,36 @@ class GameScene: SKScene {
                     customer.orderSatisfied()
                     removeCustomer(customer)
                     draggedFood?.removeFromParent()
-                    self.score += 1
+                    incrementScore(by: 1)
                     return
                 }
             }
         }
+    }
+
+
+    func restartGame() {
+        let newScene = GameScene(size: self.size)
+        newScene.scaleMode = self.scaleMode
+        let transition = SKTransition.fade(withDuration: 0.5)
+        self.view?.presentScene(newScene, transition: transition)
+        
+    }
+    private func setupScoreLabel() {
+        scoreLabel = SKLabelNode(fontNamed: "Helvetica")
+        scoreLabel.text = "Score: \(score)"
+        scoreLabel.fontSize = 24
+        scoreLabel.fontColor = .white
+        scoreLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 100)
+        scoreLabel.zPosition = 10
+        addChild(scoreLabel)
+        }
+    func incrementScore(by points: Int) {
+        score += points
+        }
+    
+    
+    deinit {
+        print("GameScene deinited")
     }
 }

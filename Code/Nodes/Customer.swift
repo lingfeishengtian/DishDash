@@ -33,6 +33,7 @@ class Customer: SKSpriteNode{
     
     func orderSatisfied() {
         served()
+        
         orderLabel.text = ""
         // TODO: Change status to eating and set timer
         self.removeFromParent()
@@ -72,4 +73,5 @@ class Customer: SKSpriteNode{
     deinit {
         waitingTimer?.invalidate()
     }
+    
 }
