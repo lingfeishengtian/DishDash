@@ -10,11 +10,11 @@ import SpriteKit
 import SwiftUI
 
 struct ContentView: View {
-    let context = GameContext(dependencies: .init())
+    let context = DishDashGameContext(dependencies: .init())
 
     var body: some View {
         ZStack {
-            SpriteView(scene: GKScene(fileNamed: "GameScene")?.rootNode as! GameScene, debugOptions: [])
+            SpriteView(scene: context.scene!, debugOptions: [])
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                 .edgesIgnoringSafeArea(.all)
         }

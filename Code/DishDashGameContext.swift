@@ -6,3 +6,12 @@
 //
 
 import Foundation
+import SpriteKit
+
+class DishDashGameContext: GameContext {
+    override init(dependencies deps: Dependencies) {
+        super.init(dependencies: deps)
+        scene = GameScene(fileNamed: "GameScene")!
+        (scene?.scene as? GameScene)?.gameContext = self
+    }
+}

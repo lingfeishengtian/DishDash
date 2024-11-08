@@ -32,6 +32,8 @@ enum TileType: String, CaseIterable {
 }
 
 class GameScene: SKScene {
+    /// Assume gameContext will always be set by GameContext creating it
+    var gameContext: DishDashGameContext!
 //    var tileMap: RestaurantTileMap = RestaurantTileMap(columns: 10, rows: 10, frame: UIScreen.main.bounds)
     var draggedFood: Food?
     var foodOnTile: [CGPoint: Food] = [:]
