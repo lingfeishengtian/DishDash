@@ -6,51 +6,45 @@
 //
 import SpriteKit
 
-//let steakProgression = ["Steak", "SteakRare", "SteakMedium", "SteakBurnt"]
-//let steak = "Steak"
 fileprivate var iterate: Int = 0
 
 class Food: SKSpriteNode {
-    var foodName: String
+    var foodIdentifier: FoodItem
     var isIngredient: Bool
     var isFinalProduct: Bool
     private var cookingStage: Int = 0
     private var cookingTimer: Timer?
-
-    init(name: String, size: CGSize, isIngredient: Bool = true, isFinalProduct: Bool = false) {
-            self.foodName = name
-            self.isIngredient = isIngredient
-            self.isFinalProduct = isFinalProduct
-            let texture = SKTexture(imageNamed: steak)
-            
-            super.init(texture: texture, color: .clear, size: size)
-        }
-
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    
+    init(name: FoodItem, size: CGSize, isIngredient: Bool = true, isFinalProduct: Bool = false) {
+        self.foodIdentifier = name
+        self.isIngredient = isIngredient
+        self.isFinalProduct = isFinalProduct
+        let texture = SKTexture(imageNamed: name.assetName)
         
-        func startCooking() {
-            if cookingStage < steakProgression.count - 1 {
-                cookingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
-                    self?.advanceCookingStage()
-                }
+        super.init(texture: texture, color: .clear, size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func startCooking() {
+        if let (stoveOperation, resultingFoodItem) = Recipe.stoveOperation(for: foodIdentifier) {
+            cookingTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(stoveOperation.timeNeeded), repeats: false) { [weak self] _ in
+                self?.updateFoodItem(foodItem: resultingFoodItem)
             }
-        }
-        
-        private func advanceCookingStage() {
-            if cookingStage < steakProgression.count - 1 {
-                cookingStage += 1
-                self.texture = SKTexture(imageNamed: steakProgression[cookingStage])
-            } else {
-                
-                cookingTimer?.invalidate()
-                cookingTimer = nil
-            }
-        }
-        
-        func stopCooking() {
-            cookingTimer?.invalidate()
-            cookingTimer = nil
         }
     }
+    
+    func updateFoodItem(foodItem: FoodItem) {
+        self.foodIdentifier = foodItem
+        self.texture = SKTexture(imageNamed: foodItem.assetName)
+        stopCooking()
+        startCooking()
+    }
+    
+    func stopCooking() {
+        cookingTimer?.invalidate()
+        cookingTimer = nil
+    }
+}
