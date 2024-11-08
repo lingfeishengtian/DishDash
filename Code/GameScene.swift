@@ -128,10 +128,11 @@ class GameScene: SKScene {
     func loseGame() {
 //        print("You lost!")
 //        fatalError()
-        customerGeneratorTimer?.invalidate()
-        customerGeneratorTimer = nil
-        self.removeAllActions()
-        self.removeAllChildren()
+        
+//        customerGeneratorTimer?.invalidate()
+//        customerGeneratorTimer = nil
+//        self.removeAllActions()
+//        self.removeAllChildren()
         showLosingScreen()
     }
     
