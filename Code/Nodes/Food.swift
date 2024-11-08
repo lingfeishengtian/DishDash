@@ -6,8 +6,8 @@
 //
 import SpriteKit
 
-let steakProgression = ["Steak", "SteakRare", "SteakMedium", "SteakBurnt"]
-let steak = "Steak"
+//let steakProgression = ["Steak", "SteakRare", "SteakMedium", "SteakBurnt"]
+//let steak = "Steak"
 fileprivate var iterate: Int = 0
 
 class Food: SKSpriteNode {
