@@ -38,6 +38,11 @@ class GameScene: SKScene {
     
     var tileMap: SKTileMapNode!
     
+    var score: Int = 0
+    var scoreLabel: SKLabelNode!
+    var customers: [Customer] = []
+    var tablePositions: [CGPoint] = []
+    
     private let columns = 10
     private let rows = 10
     
