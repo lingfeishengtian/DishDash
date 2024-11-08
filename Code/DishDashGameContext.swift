@@ -14,4 +14,9 @@ class DishDashGameContext: GameContext {
         scene = GameScene(fileNamed: "GameScene")!
         (scene?.scene as? GameScene)?.gameContext = self
     }
+    
+    func resetScene() {
+        scene = GameScene(fileNamed: "GameScene")!
+        (scene?.scene as? GameScene)?.gameContext = self
+    }
 }

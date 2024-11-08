@@ -98,7 +98,7 @@ class GameScene: SKScene {
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor private var customersAtTables: [Customer] = []
     func addCustomer() {
-        let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 20, size: CGSize(width: 50, height: 50)) {
+        let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 1, size: CGSize(width: 50, height: 50)) {
             print("Customer left")
             self.loseGame()
         }
@@ -134,8 +134,10 @@ class GameScene: SKScene {
         self.removeAllChildren()
         showLosingScreen()
     }
+    
+    var background: SKShapeNode!
     private func showLosingScreen() {
-        let background = SKShapeNode(rect: self.frame)
+        background = SKShapeNode(rect: self.frame)
         background.fillColor = UIColor.black.withAlphaComponent(0.75)
         background.zPosition = 10
                 
@@ -155,7 +157,9 @@ class GameScene: SKScene {
         background.addChild(gameOverLabel)
         background.addChild(restartButton)
         self.addChild(background)
-        }
+    }
+    
+    
     /// Reserves a table at a TilePoint (sets the customer's table to this tile point) and returns the coordinates that customer should "sit" at
     func reserveTable(for customer: Customer) -> CGPoint? {
         let positions = getPositionsOfTileGroup(for: TileType.table)
@@ -199,20 +203,21 @@ class GameScene: SKScene {
                 addChild(draggedFood)
             }
         } else {
-            location = touch.location(in: tileMap)
-            let column = tileMap.tileColumnIndex(fromPosition: location)
-            let row = tileMap.tileRowIndex(fromPosition: location)
+            let tileMaplocation = touch.location(in: tileMap)
+            let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
+            let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
             let tilePosition = CGPoint(x: column, y: row)
             if let food = foodOnTile[tilePosition] {
-                location = touch.location(in: self)
                 food.position = location
                 food.stopCooking()
                 draggedFood = food
                 foodOnTile[tilePosition] = nil
             }
         }
-        if let node = self.nodes(at: location).first, node.name == "restartButton" {
+        
+        if atPoint(location).name == "RestartButton" {
             restartGame()
+            background.removeFromParent()
         }
     }
     
@@ -285,12 +290,21 @@ class GameScene: SKScene {
 
 
     func restartGame() {
-        let newScene = GameScene(size: self.size)
-        newScene.scaleMode = self.scaleMode
-        let transition = SKTransition.fade(withDuration: 0.5)
-        self.view?.presentScene(newScene, transition: transition)
+        self.customers.removeAll()
+        self.customersAtTables.removeAll()
+        self.queuedCustomersOutside.removeAll()
+        self.customersSinceStart = 0
+        self.draggedFood?.removeFromParent()
+        self.draggedFood = nil
+        self.foodOnTile.removeAll()
         
+        for node in self.children {
+            if node != tileMap && node != scoreLabel && node.name != "FoodSource" {
+                node.removeFromParent()
+            }
+        }
     }
+    
     private func setupScoreLabel() {
         scoreLabel = SKLabelNode(fontNamed: "Helvetica")
         scoreLabel.text = "Score: \(score)"
