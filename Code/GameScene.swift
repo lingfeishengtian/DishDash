@@ -62,11 +62,11 @@ class GameScene: SKScene {
     
     private let baseCustomerSpawnRate: Int = 10
     var scoreLabel: SKLabelNode!
-        var score: Int = 0 {
-            didSet {
-                scoreLabel.text = "Score: \(score)"
-            }
+    var score: Int = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
         }
+    }
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
@@ -79,9 +79,9 @@ class GameScene: SKScene {
     }
     //lol i cant get it in view without this, figure this out later
     override func didMove(to view: SKView) {
-            super.didMove(to: view)
-            setupScoreLabel()
-        }
+        super.didMove(to: view)
+        setupScoreLabel()
+    }
     
     private var customersSinceStart: Int = 0
     /// Reduce seconds linearly from 10 to 5 based on customers since start
@@ -98,7 +98,7 @@ class GameScene: SKScene {
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor private var customersAtTables: [Customer] = []
     func addCustomer() {
-        let newCustomer = Customer(order: FoodItem.randomOrderableItem(), timeLimit: 1, size: CGSize(width: 50, height: 50)) {
+        let newCustomer = Customer(order: FoodItem.randomOrderableItem(options: .sushi), timeLimit: 1, size: CGSize(width: 50, height: 50)) {
             print("Customer left")
             self.loseGame()
         }
@@ -126,13 +126,6 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-//        print("You lost!")
-//        fatalError()
-        
-//        customerGeneratorTimer?.invalidate()
-//        customerGeneratorTimer = nil
-//        self.removeAllActions()
-//        self.removeAllChildren()
         showLosingScreen()
     }
     
@@ -141,20 +134,20 @@ class GameScene: SKScene {
         background = SKShapeNode(rect: self.frame)
         background.fillColor = UIColor.black.withAlphaComponent(0.75)
         background.zPosition = 10
-                
-                // Game Over
+        
+        // Game Over
         let gameOverLabel = SKLabelNode(text: "Game Over")
         gameOverLabel.fontSize = 40
         gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
         gameOverLabel.zPosition = 11
-                
-                // Restart button
+        
+        // Restart button
         let restartButton = SKLabelNode(text: "Restart")
         restartButton.fontSize = 30
         restartButton.name = "RestartButton"
         restartButton.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
         restartButton.zPosition = 11
-
+        
         background.addChild(gameOverLabel)
         background.addChild(restartButton)
         self.addChild(background)
@@ -198,7 +191,8 @@ class GameScene: SKScene {
         //let node = atPoint(location)
         
         if atPoint(location).name == "FoodSource" {
-            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+//            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+            draggedFood = Food(name: .PotRawRice, size: CGSize(width: 32, height: 32))
             if let draggedFood = draggedFood {
                 draggedFood.position = location
                 addChild(draggedFood)
@@ -236,14 +230,16 @@ class GameScene: SKScene {
         let tilePosition = CGPoint(x: column, y: row)
         //let location = touch.location(in: self)
         //let node = atPoint(location)
-
-       
+        
+        
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
             switch tileGroup.name {
             case TileType.machine.rawValue:
                 placeFoodOnMachineTile(draggedFood, at: tilePosition)
-            case TileType.counter.rawValue, TileType.sink.rawValue:
+            case TileType.counter.rawValue:
                 placeFoodOnNonMachineTile(draggedFood, at: tilePosition)
+            case TileType.sink.rawValue:
+                eventItemPlacedOnSink(draggedFood, at: tilePosition)
             case TileType.table.rawValue:
                 eventItemPlacedOnTable(draggedFood, at: tilePosition)
             default:
@@ -288,8 +284,13 @@ class GameScene: SKScene {
             }
         }
     }
-
-
+    
+    private func eventItemPlacedOnSink(_ food: Food, at tilePosition: CGPoint) {
+        setFoodItemDown(food, at: tilePosition)
+        food.sinkEvent()
+    }
+    
+    
     func restartGame() {
         self.customers.removeAll()
         self.customersAtTables.removeAll()
@@ -314,10 +315,11 @@ class GameScene: SKScene {
         scoreLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 100)
         scoreLabel.zPosition = 10
         addChild(scoreLabel)
-        }
+    }
+    
     func incrementScore(by points: Int) {
         score += points
-        }
+    }
     
     
     deinit {

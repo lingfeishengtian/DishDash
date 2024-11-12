@@ -22,6 +22,8 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         switch self {
         case .steak:
             return 0...2
+        case .sushi:
+            return 1003...1004
         default:
             return 0...999
         }
@@ -34,8 +36,16 @@ enum FoodItem: Int, CaseIterable {
     case SteakMedium = 1
     case SteakBurnt = 2 // Well Done for insane people
     
-    /// Source Items have 1000 <= ID < 5000
-    case SteakRaw = 1000
+    /// Cooking Assets have 1000 <= ID < 5000
+    case Pot = 1000
+    case PotWater = 1001
+    case PotRawRice = 1002
+    case PotRawRiceWater = 1003
+    case PotCookedRice = 1004
+    
+    case Rice = 1005
+    
+    case SteakRaw = 2000
     
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
@@ -52,6 +62,18 @@ enum FoodItem: Int, CaseIterable {
             return "SteakBurnt"
         case .BurntBlock:
             return "BurntBlock"
+        case .Pot:
+            return "EmptyPot"
+        case .PotWater:
+            return "PotWater"
+        case .PotRawRice:
+            return "PotRawRice"
+        case .PotRawRiceWater:
+            return "PotRawRiceWater"
+        case .PotCookedRice:
+            return "PotCookedRice"
+        case .Rice:
+            return "RawRice"
         }
     }
     
@@ -67,13 +89,27 @@ enum FoodItem: Int, CaseIterable {
             return "Well Done Steak"
         case .BurntBlock:
             return "Burnt Block"
+        case .Pot:
+            return "Pot"
+        case .PotWater:
+            return "Pot of Water"
+        case .PotRawRice:
+            return "Pot of Raw Rice"
+        case .PotRawRiceWater:
+            return "Pot of Raw Rice and Water"
+        case .PotCookedRice:
+            return "Pot of Cooked Rice"
+        case .Rice:
+            return "Raw Rice"
         }
     }
     
     static func randomOrderableItem(options: OrderableFoodRandomSelectionOptions = .steak) -> FoodItem {
         var orderableItems = [FoodItem]()
         
-        for item in FoodItem.allCases where item.rawValue < 1000 && options.idRange().contains(item.rawValue) {
+        for item in FoodItem.allCases where
+//        item.rawValue < 1000 &&
+        options.idRange().contains(item.rawValue) {
             orderableItems.append(item)
         }
         
@@ -113,6 +149,12 @@ enum StoveOperation: Int {
     }
 }
 
+enum CombineItemImpact {
+    case Delete
+    case PortionOut(Int)
+    case Replace(FoodItem)
+}
+
 /// Recipes are a set of actions defined that takes in two ingredients and produces a final product
 struct Recipe {
     static func stoveOperation(for foodItem: FoodItem) -> (operation: StoveOperation, result: FoodItem)? {
@@ -125,7 +167,30 @@ struct Recipe {
             return (.CookShort, .SteakBurnt)
         case .SteakBurnt:
             return (.CookMedium, .BurntBlock)
+        case .PotRawRiceWater:
+            return (.CookMedium, .PotCookedRice)
         default:
+            return nil
+        }
+    }
+    
+    static func action(for foodItem: FoodItem) -> (action: Action, result: FoodItem)? {
+        switch foodItem {
+        case .Pot:
+            return (.WaterFill, .PotWater)
+        case .PotRawRice:
+            return (.WaterFill, .PotRawRiceWater)
+        default:
+            return nil
+        }
+    }
+    
+    // TODO: Implement any order
+    static func combineIngredients(_ ingredient1: FoodItem, _ ingredient2: FoodItem) -> (ingredient1Result: CombineItemImpact, ingredient2Result: CombineItemImpact)? {
+        switch (ingredient1, ingredient2) {
+            case (.PotWater, .Rice):
+            return (.Delete, .Replace(.PotRawRice))
+            default:
             return nil
         }
     }

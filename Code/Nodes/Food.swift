@@ -47,4 +47,11 @@ class Food: SKSpriteNode {
         cookingTimer?.invalidate()
         cookingTimer = nil
     }
+    
+    func sinkEvent() {
+        let sinkOperation = Recipe.action(for: foodIdentifier)
+        if sinkOperation?.action == .WaterFill {
+            updateFoodItem(foodItem: sinkOperation!.result)
+        }
+    }
 }
