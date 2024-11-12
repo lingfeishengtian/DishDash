@@ -33,8 +33,6 @@ class Customer: SKSpriteNode{
     
     func orderSatisfied() {
         served()
-        
-        orderLabel.text = ""
         // TODO: Change status to eating and set timer
         self.removeFromParent()
     }
@@ -43,12 +41,33 @@ class Customer: SKSpriteNode{
         fatalError("init(coder:) has not been implemented") }
     
     private func setupOrderLabel(size: CGSize) {
-        orderLabel = SKLabelNode(text: order.description)
-        orderLabel.fontSize = 20
-        orderLabel.fontColor = .white
-        orderLabel.alpha = 1.0
-        orderLabel.position = CGPoint(x: 0, y: size.height / 2 + 5)
-        addChild(orderLabel)
+//        orderLabel = SKLabelNode(text: order.description)
+//        orderLabel.fontSize = 20
+//        orderLabel.fontColor = .white
+//        orderLabel.alpha = 1.0
+//        orderLabel.position = CGPoint(x: 0, y: size.height / 2 + 5)
+//        addChild(orderLabel)
+        
+        let textBox = SKShapeNode(rectOf: CGSize(width: size.width, height: size.height))
+        textBox.fillColor = .white
+        textBox.strokeColor = .black
+        textBox.position = CGPoint(x: 0, y: size.height / 2 + 5)
+        
+        let orderImage = SKSpriteNode(imageNamed: order.assetName)
+        orderImage.size = CGSize(width: size.width / 2, height: size.height / 2)
+        orderImage.position = CGPoint(x: 0, y: 0)
+        orderImage.scale(to: CGSize(width: size.width, height: size.height))
+        
+        addChild(textBox)
+        textBox.addChild(orderImage)
+        
+        // animate bouncing up down
+        let moveUp = SKAction.moveBy(x: 0, y: 5, duration: 0.5)
+        moveUp.timingMode = .easeInEaseOut
+        let moveDown = SKAction.moveBy(x: 0, y: -5, duration: 0.5)
+        moveDown.timingMode = .easeInEaseOut
+        let moveSequence = SKAction.sequence([moveUp, moveDown])
+        textBox.run(SKAction.repeatForever(moveSequence))
     }
     
     private func startCountdown() {

@@ -185,10 +185,12 @@ class GameScene: SKScene {
         return tablePositions
     }
     
+    var touchesBeganLocation: TilePoint? = nil
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         var location = touch.location(in: self)
         //let node = atPoint(location)
+        touchesBeganLocation = nil
         
         if atPoint(location).name == "FoodSource" {
 //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
@@ -214,6 +216,7 @@ class GameScene: SKScene {
                 food.stopCooking()
                 draggedFood = food
                 foodOnTile[tilePosition] = nil
+                touchesBeganLocation = TilePoint(x: column, y: row)
             }
         }
         
@@ -229,15 +232,24 @@ class GameScene: SKScene {
         draggedFood.position = location
     }
     
+    func returnFoodToOriginalPosition(food: Food) {
+        food.removeFromParent()
+        if let touchesBeganLocation = touchesBeganLocation {
+            let posTM = tileMap.convert(tileMap.centerOfTile(atColumn: Int(touchesBeganLocation.x), row: Int(touchesBeganLocation.y)), to: self)
+            food.position = posTM
+            food.scale(to: CGSize(width: 50, height: 50))
+            self.addChild(food)
+            
+            foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = food
+        }
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood else { return }
         let positionInTileMap = touch.location(in: tileMap)
         let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
         let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
         let tilePosition = CGPoint(x: column, y: row)
-        //let location = touch.location(in: self)
-        //let node = atPoint(location)
-        
         
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
             switch tileGroup.name {
@@ -250,8 +262,10 @@ class GameScene: SKScene {
             case TileType.table.rawValue:
                 eventItemPlacedOnTable(draggedFood, at: tilePosition)
             default:
-                draggedFood.removeFromParent()
+                returnFoodToOriginalPosition(food: draggedFood)
             }
+        } else {
+            returnFoodToOriginalPosition(food: draggedFood)
         }
         
         self.draggedFood = nil
@@ -267,14 +281,21 @@ class GameScene: SKScene {
         if let existingFood = foodOnTile[tilePosition] {
             if let combinedItem = Recipe.combineIngredients(existingFood.foodIdentifier, food.foodIdentifier) {
                 existingFood.removeFromParent()
-                food.removeFromParent()
-                self.addChild(food)
                 food.position = positionInTileMap
                 food.updateFoodItem(foodItem: combinedItem)
                 food.scale(to: CGSize(width: 50, height: 50))
                 foodOnTile[tilePosition] = food
+                food.removeFromParent()
+                self.addChild(food)
                 return true
             } else {
+                food.removeFromParent()
+                if let touchesBeganLocation {
+                    foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = food
+                    food.position = tileMap.centerOfTile(atColumn: touchesBeganLocation.x, row: touchesBeganLocation.y)
+                    food.scale(to: CGSize(width: 50, height: 50))
+                    self.addChild(food)
+                }
                 return false
             }
         }
@@ -313,6 +334,7 @@ class GameScene: SKScene {
                     removeCustomer(customer)
                     draggedFood?.removeFromParent()
                     incrementScore(by: 1)
+                    foodOnTile[tilePosition] = nil
                     return
                 }
             }

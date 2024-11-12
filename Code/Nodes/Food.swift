@@ -31,16 +31,19 @@ class Food: SKSpriteNode {
     func startCooking() {
         if let (stoveOperation, resultingFoodItem) = Recipe.stoveOperation(for: foodIdentifier) {
             cookingTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(stoveOperation.timeNeeded), repeats: false) { [weak self] _ in
-                self?.updateFoodItem(foodItem: resultingFoodItem)
+                self?.updateFoodItem(foodItem: resultingFoodItem, shouldCook: true)
             }
         }
     }
     
-    func updateFoodItem(foodItem: FoodItem) {
+    func updateFoodItem(foodItem: FoodItem, shouldCook: Bool = false) {
         self.foodIdentifier = foodItem
         self.texture = SKTexture(imageNamed: foodItem.assetName)
         stopCooking()
-        startCooking()
+        
+        if shouldCook {
+            startCooking()
+        }
     }
     
     func stopCooking() {

@@ -14,8 +14,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "348"
-            endingLineNumber = "348"
+            startingLineNumber = "370"
+            endingLineNumber = "370"
             landmarkName = "setupScoreLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
             landmarkName = "setupScoreLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "setupScoreLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
+            startingLineNumber = "350"
+            endingLineNumber = "350"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "341"
-            endingLineNumber = "341"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "restartGame()"
             landmarkType = "7">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "touchesEnded(_:with:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "touchesMoved(_:with:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "284"
-            endingLineNumber = "284"
+            startingLineNumber = "305"
+            endingLineNumber = "305"
             landmarkName = "setFoodItemDown(_:at:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -207,7 +207,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "367"
-            endingLineNumber = "367">
+            endingLineNumber = "367"
+            landmarkName = "GameScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -220,8 +222,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
+            startingLineNumber = "385"
+            endingLineNumber = "385"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -236,25 +238,9 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
             landmarkName = "touchesMoved(_:with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "40B07976-B02D-4177-AF69-1E134B8788D3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Code/GameScene.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
-            landmarkName = "touchesBegan(_:with:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -268,8 +254,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "357"
-            endingLineNumber = "357"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
             landmarkName = "incrementScore(by:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -312,8 +298,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
             landmarkName = "incrementScore(by:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -328,8 +314,8 @@
             filePath = "Code/Nodes/Food.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "sinkEvent()"
             landmarkType = "7">
          </BreakpointContent>
@@ -359,7 +345,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "379"
-            endingLineNumber = "379">
+            endingLineNumber = "379"
+            landmarkName = "incrementScore(by:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -388,8 +376,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -404,8 +392,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
             landmarkName = "setupScoreLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -420,8 +408,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "211"
-            endingLineNumber = "211"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
             landmarkName = "touchesBegan(_:with:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -437,7 +425,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "366"
-            endingLineNumber = "366">
+            endingLineNumber = "366"
+            landmarkName = "restartGame()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -451,7 +441,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "370"
-            endingLineNumber = "370">
+            endingLineNumber = "370"
+            landmarkName = "setupScoreLabel()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -464,8 +456,8 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
             landmarkName = "eventItemPlacedOnSink(_:at:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -480,8 +472,24 @@
             filePath = "Code/GameScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "setFoodItemDown(_:at:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "794B9D30-1A12-401D-816A-2F37917BA146"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Code/GameScene.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
             landmarkName = "setFoodItemDown(_:at:)"
             landmarkType = "7">
          </BreakpointContent>
