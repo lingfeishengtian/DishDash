@@ -149,12 +149,6 @@ enum StoveOperation: Int {
     }
 }
 
-enum CombineItemImpact {
-    case Delete
-    case PortionOut(Int)
-    case Replace(FoodItem)
-}
-
 /// Recipes are a set of actions defined that takes in two ingredients and produces a final product
 struct Recipe {
     static func stoveOperation(for foodItem: FoodItem) -> (operation: StoveOperation, result: FoodItem)? {
@@ -186,11 +180,20 @@ struct Recipe {
     }
     
     // TODO: Implement any order
-    static func combineIngredients(_ ingredient1: FoodItem, _ ingredient2: FoodItem) -> (ingredient1Result: CombineItemImpact, ingredient2Result: CombineItemImpact)? {
+    static func combineIngredients(_ ingredient1: FoodItem, _ ingredient2: FoodItem) -> FoodItem? {
+        let result = combineIngredientsInternal(ingredient1, ingredient2)
+        let result2 = combineIngredientsInternal(ingredient2, ingredient1)
+        
+        return result ?? result2
+    }
+    
+    private static func combineIngredientsInternal(_ ingredient1: FoodItem, _ ingredient2: FoodItem) -> FoodItem? {
         switch (ingredient1, ingredient2) {
-            case (.PotWater, .Rice):
-            return (.Delete, .Replace(.PotRawRice))
-            default:
+        case (.PotWater, .Rice):
+            return .PotRawRiceWater
+        case (.Pot, .Rice):
+            return .PotRawRice
+        default:
             return nil
         }
     }

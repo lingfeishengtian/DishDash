@@ -98,7 +98,7 @@ class GameScene: SKScene {
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor private var customersAtTables: [Customer] = []
     func addCustomer() {
-        let newCustomer = Customer(order: FoodItem.randomOrderableItem(options: .sushi), timeLimit: 1, size: CGSize(width: 50, height: 50)) {
+        let newCustomer = Customer(order: FoodItem.randomOrderableItem(options: .sushi), timeLimit: 20, size: CGSize(width: 50, height: 50)) {
             print("Customer left")
             self.loseGame()
         }
@@ -126,7 +126,7 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-        showLosingScreen()
+//        showLosingScreen()
     }
     
     var background: SKShapeNode!
@@ -192,12 +192,19 @@ class GameScene: SKScene {
         
         if atPoint(location).name == "FoodSource" {
 //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-            draggedFood = Food(name: .PotRawRice, size: CGSize(width: 32, height: 32))
+            draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
             if let draggedFood = draggedFood {
                 draggedFood.position = location
                 addChild(draggedFood)
             }
-        } else {
+        } else if atPoint(location).name == "FoodSourceRice" {
+            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+            draggedFood = Food(name: .Rice, size: CGSize(width: 32, height: 32))
+            if let draggedFood = draggedFood {
+                draggedFood.position = location
+                addChild(draggedFood)
+            }
+        }else {
             let tileMaplocation = touch.location(in: tileMap)
             let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
             let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
@@ -250,27 +257,54 @@ class GameScene: SKScene {
         self.draggedFood = nil
     }
     
-    private func setFoodItemDown(_ food: Food, at tilePosition: CGPoint) {
+    enum CombineItemError: Error {
+        case noCombination
+    }
+    
+    private func setFoodItemDown(_ food: Food, at tilePosition: CGPoint) -> Bool {
         let positionInTileMap = tileMap.convert(tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y)), to: self)
+        
+        if let existingFood = foodOnTile[tilePosition] {
+            if let combinedItem = Recipe.combineIngredients(existingFood.foodIdentifier, food.foodIdentifier) {
+                existingFood.removeFromParent()
+                food.removeFromParent()
+                self.addChild(food)
+                food.position = positionInTileMap
+                food.updateFoodItem(foodItem: combinedItem)
+                food.scale(to: CGSize(width: 50, height: 50))
+                foodOnTile[tilePosition] = food
+                return true
+            } else {
+                return false
+            }
+        }
+        
         food.removeFromParent()
         self.addChild(food)
         food.position = positionInTileMap
         food.scale(to: CGSize(width: 50, height: 50))
         foodOnTile[tilePosition] = food
         food.stopCooking()
+        return true
     }
     
     private func placeFoodOnMachineTile(_ food: Food, at tilePosition: CGPoint) {
-        setFoodItemDown(food, at: tilePosition)
+        if !setFoodItemDown(food, at: tilePosition) {
+            return
+        }
         food.startCooking()
     }
     
     private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: CGPoint) {
-        setFoodItemDown(food, at: tilePosition)
+        if !setFoodItemDown(food, at: tilePosition) {
+            return
+        }
     }
     
     private func eventItemPlacedOnTable(_ food: Food, at tilePosition: CGPoint) {
-        setFoodItemDown(food, at: tilePosition)
+        if !setFoodItemDown(food, at: tilePosition) {
+            return
+        }
         
         for customer in customersAtTables {
             if customer.tableSittingAt == TilePoint(x: Int(tilePosition.x), y: Int(tilePosition.y)) {
@@ -286,7 +320,9 @@ class GameScene: SKScene {
     }
     
     private func eventItemPlacedOnSink(_ food: Food, at tilePosition: CGPoint) {
-        setFoodItemDown(food, at: tilePosition)
+        if !setFoodItemDown(food, at: tilePosition) {
+            return
+        }
         food.sinkEvent()
     }
     
