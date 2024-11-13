@@ -49,6 +49,7 @@ class GameScene: SKScene {
     var foodOnTile: [CGPoint: Food] = [:]
     
     var tileMap: SKTileMapNode!
+    var foodSourceToolbar: SKNode!
     
     //var score: Int = 0
     //var scoreLabel: SKLabelNode!
@@ -74,6 +75,7 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
         super.sceneDidLoad()
         tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
+        foodSourceToolbar = self.childNode(withName: "FoodSourceToolbar") as? SKNode
         setupScoreLabel()
         customerGeneratorTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(baseCustomerSpawnRate), repeats: false) { [weak self] _ in
             print("Resrving table")
@@ -84,19 +86,17 @@ class GameScene: SKScene {
     
     private func generateFoodSourcesToolbar() {
         let sources = FoodOrderCategory.Sushi.foodSources
-        let screenWidth = UIScreen.main.bounds.width
-        // TODO: Figure out how to calculate this properly
-        let tileMapMinX = tileMap.calculateAccumulatedFrame().minX + 100
-        let tileMapMaxY = tileMap.calculateAccumulatedFrame().minY - 50
-        let width = screenWidth / CGFloat(sources.count)
+        let widthOfToolbar = foodSourceToolbar.frame.width
+        let spacing = widthOfToolbar / CGFloat(sources.count)
         
         for (index, source) in sources.enumerated() {
-            let foodSource = SKSpriteNode(imageNamed: source.assetName)
-            foodSource.name = "FoodSource" + String(source.rawValue)
-            foodSource.position = CGPoint(x: tileMapMinX + width * CGFloat(index), y: tileMapMaxY)
-            foodSource.size = CGSize(width: 50, height: 50)
+            let foodSourceItem = SKSpriteNode(imageNamed: source.assetName)
+            foodSourceItem.name = "FoodSource\(source.rawValue)"
+            foodSourceItem.size = CGSize(width: 50, height: 50)
+            let spacingBeforeAfter = (spacing - 50) / 2
+            foodSourceItem.position = CGPoint(x: foodSourceToolbar.frame.minX + CGFloat(index * 2 + 1) * spacingBeforeAfter + 50 / 2 + 50 * CGFloat(index), y: 0)
             
-            addChild(foodSource)
+            foodSourceToolbar.addChild(foodSourceItem)
         }
     }
     
