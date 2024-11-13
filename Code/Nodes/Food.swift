@@ -35,6 +35,13 @@ class Food: SKSpriteNode {
             }
         }
     }
+//    func startSlice() {
+//        if foodIdentifier == .WholeFish {
+//            cookingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] _ in
+//                self?.updateFoodItem(foodItem: .SlicedFish, shouldSlice: false)
+//            }
+//        }
+//    }
     
     func updateFoodItem(foodItem: FoodItem, shouldCook: Bool = false) {
         self.foodIdentifier = foodItem

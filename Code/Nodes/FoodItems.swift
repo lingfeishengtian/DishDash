@@ -23,7 +23,7 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         case .steak:
             return 0...2
         case .sushi:
-            return 1003...1004
+            return 1003...1007
         default:
             return 0...999
         }
@@ -32,9 +32,10 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
 
 enum FoodItem: Int, CaseIterable {
     /// Orderable Items have IDs < 1000
+    case SteakRaw = 2000
     case SteakRare = 0
     case SteakMedium = 1
-    case SteakBurnt = 2 // Well Done for insane people
+    case SteakBurnt = 2 // Well Done for insane people thats my dad :(
     
     /// Cooking Assets have 1000 <= ID < 5000
     case Pot = 1000
@@ -45,7 +46,8 @@ enum FoodItem: Int, CaseIterable {
     
     case Rice = 1005
     
-    case SteakRaw = 2000
+    case WholeFish = 1006
+    case SlicedFish = 1007
     
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
@@ -74,6 +76,10 @@ enum FoodItem: Int, CaseIterable {
             return "PotCookedRice"
         case .Rice:
             return "RawRice"
+        case .WholeFish:
+            return "WholeFish"
+        case .SlicedFish:
+            return "SlicedFish"
         }
     }
     
@@ -101,6 +107,10 @@ enum FoodItem: Int, CaseIterable {
             return "Pot of Cooked Rice"
         case .Rice:
             return "Raw Rice"
+        case .WholeFish:
+            return "WholeFish"
+        case .SlicedFish:
+            return "SlicedFish"
         }
     }
     
@@ -174,6 +184,8 @@ struct Recipe {
             return (.WaterFill, .PotWater)
         case .PotRawRice:
             return (.WaterFill, .PotRawRiceWater)
+        case .WholeFish:
+            return (.Cut, .SlicedFish)
         default:
             return nil
         }
@@ -198,3 +210,6 @@ struct Recipe {
         }
     }
 }
+
+//combining items makes original items inivisble
+//need to hold to cut instead of tapping and waiting

@@ -57,6 +57,9 @@ class GameScene: SKScene {
     
     var customerGeneratorTimer: Timer?
     
+    var cuttingTimer: Timer?
+    var cuttingInProgress = false
+    
     private let columns = 10
     private let rows = 10
     
@@ -126,7 +129,7 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-//        showLosingScreen()
+        //        showLosingScreen()
     }
     
     var background: SKShapeNode!
@@ -192,9 +195,14 @@ class GameScene: SKScene {
         //let node = atPoint(location)
         touchesBeganLocation = nil
         
+        
         if atPoint(location).name == "FoodSource" {
-//            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-            draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
+            
+            //change this for food source (reminder for myself so its easier to find)
+            
+            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+            //draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
+            draggedFood = Food(name: .WholeFish, size: CGSize(width: 32, height: 32))
             if let draggedFood = draggedFood {
                 draggedFood.position = location
                 addChild(draggedFood)
@@ -212,13 +220,23 @@ class GameScene: SKScene {
             let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
             let tilePosition = CGPoint(x: column, y: row)
             if let food = foodOnTile[tilePosition] {
-                food.position = location
-                food.stopCooking()
-                draggedFood = food
-                foodOnTile[tilePosition] = nil
-                touchesBeganLocation = TilePoint(x: column, y: row)
+                if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier) {
+                    draggedFood = food
+                    cuttingInProgress = true
+                    cuttingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
+                        food.updateFoodItem(foodItem: slicedFood)
+                        return
+                    }
+                }
+                else {
+                    food.position = location
+                    food.stopCooking()
+                    draggedFood = food
+                    foodOnTile[tilePosition] = nil
+                    touchesBeganLocation = TilePoint(x: column, y: row) }
             }
         }
+    
         
         if atPoint(location).name == "RestartButton" {
             restartGame()
@@ -243,7 +261,7 @@ class GameScene: SKScene {
             foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = food
         }
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood else { return }
         let positionInTileMap = touch.location(in: tileMap)
@@ -378,7 +396,6 @@ class GameScene: SKScene {
     func incrementScore(by points: Int) {
         score += points
     }
-    
     
     deinit {
         print("GameScene deinited")
