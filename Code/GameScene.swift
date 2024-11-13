@@ -228,6 +228,7 @@ class GameScene: SKScene {
                         food.updateFoodItem(foodItem: slicedFood)
                         return
                     }
+                    food.createTimerGuage(time: 3)
                 } else {
                     food.position = location
                 }
@@ -253,6 +254,7 @@ class GameScene: SKScene {
             if distance > 50 {
                 cuttingTimer?.invalidate()
                 cuttingInProgress = false
+                draggedFood.removeTimerGuage()
             } else {
                 return
             }
@@ -280,6 +282,7 @@ class GameScene: SKScene {
         let tilePosition = CGPoint(x: column, y: row)
         
         cuttingTimer?.invalidate()
+        draggedFood.removeTimerGuage()
         
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
             switch tileGroup.name {
