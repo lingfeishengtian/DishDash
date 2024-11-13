@@ -220,21 +220,21 @@ class GameScene: SKScene {
             let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
             let tilePosition = CGPoint(x: column, y: row)
             if let food = foodOnTile[tilePosition] {
+                draggedFood = food
+                
                 if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier) {
-                    draggedFood = food
                     cuttingInProgress = true
                     cuttingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
                         food.updateFoodItem(foodItem: slicedFood)
                         return
                     }
-                }
-                else {
+                } else {
                     food.position = location
-                    food.stopCooking()
-                    draggedFood = food
-                    foodOnTile[tilePosition] = nil
-                    touchesBeganLocation = TilePoint(x: column, y: row) }
-            }
+                }
+                
+                food.stopCooking()
+                foodOnTile[tilePosition] = nil
+                touchesBeganLocation = TilePoint(x: column, y: row) }
         }
     
         
@@ -247,6 +247,16 @@ class GameScene: SKScene {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood else { return }
         let location = touch.location(in: self)
+        if cuttingInProgress {
+            // calculate distance from original location
+            let distance = sqrt(pow(location.x - draggedFood.position.x, 2) + pow(location.y - draggedFood.position.y, 2))
+            if distance > 50 {
+                cuttingTimer?.invalidate()
+                cuttingInProgress = false
+            } else {
+                return
+            }
+        }
         draggedFood.position = location
     }
     
@@ -268,6 +278,8 @@ class GameScene: SKScene {
         let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
         let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
         let tilePosition = CGPoint(x: column, y: row)
+        
+        cuttingTimer?.invalidate()
         
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
             switch tileGroup.name {
@@ -308,12 +320,7 @@ class GameScene: SKScene {
                 return true
             } else {
                 food.removeFromParent()
-                if let touchesBeganLocation {
-                    foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = food
-                    food.position = tileMap.centerOfTile(atColumn: touchesBeganLocation.x, row: touchesBeganLocation.y)
-                    food.scale(to: CGSize(width: 50, height: 50))
-                    self.addChild(food)
-                }
+                returnFoodToOriginalPosition(food: food)
                 return false
             }
         }
