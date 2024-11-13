@@ -10,6 +10,7 @@
 //
 import Foundation
 
+@available(*, deprecated, message: "Use FoodOrderCategory instead")
 struct OrderableFoodRandomSelectionOptions: OptionSet {
     let rawValue: Int
     
@@ -26,6 +27,20 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
             return 1003...1007
         default:
             return 0...999
+        }
+    }
+}
+
+enum FoodOrderCategory: Int {
+    case Steak = 0
+    case Sushi = 1
+    
+    var foodSources: [FoodItem] {
+        switch self {
+        case .Steak:
+            return [.SteakRaw]
+        case .Sushi:
+            return [.WholeFish, .Rice, .Pot]
         }
     }
 }
@@ -114,6 +129,7 @@ enum FoodItem: Int, CaseIterable {
         }
     }
     
+    @available(*, deprecated, message: "Use FoodOrderCategory instead")
     static func randomOrderableItem(options: OrderableFoodRandomSelectionOptions = .steak) -> FoodItem {
         var orderableItems = [FoodItem]()
         

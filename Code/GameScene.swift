@@ -79,7 +79,28 @@ class GameScene: SKScene {
             print("Resrving table")
             self?.addCustomer()
         }
+        generateFoodSourcesToolbar()
     }
+    
+    private func generateFoodSourcesToolbar() {
+        let sources = FoodOrderCategory.Sushi.foodSources
+        let screenWidth = UIScreen.main.bounds.width
+        // TODO: Figure out how to calculate this properly
+        let tileMapMinX = tileMap.calculateAccumulatedFrame().minX + 100
+        let tileMapMaxY = tileMap.calculateAccumulatedFrame().minY - 50
+        let width = screenWidth / CGFloat(sources.count)
+        
+        for (index, source) in sources.enumerated() {
+            let foodSource = SKSpriteNode(imageNamed: source.assetName)
+            foodSource.name = "FoodSource" + String(source.rawValue)
+            foodSource.position = CGPoint(x: tileMapMinX + width * CGFloat(index), y: tileMapMaxY)
+            foodSource.size = CGSize(width: 50, height: 50)
+            
+            addChild(foodSource)
+        }
+    }
+    
+    
     //lol i cant get it in view without this, figure this out later
     override func didMove(to view: SKView) {
         super.didMove(to: view)
@@ -196,24 +217,29 @@ class GameScene: SKScene {
         touchesBeganLocation = nil
         
         
-        if atPoint(location).name == "FoodSource" {
-            
-            //change this for food source (reminder for myself so its easier to find)
-            
-            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-            //draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
-            draggedFood = Food(name: .WholeFish, size: CGSize(width: 32, height: 32))
+        if let nameSource = atPoint(location).name, nameSource.hasPrefix("FoodSource"), let foodRawValue = Int(nameSource.dropFirst("FoodSource".count)), let foodItem = FoodItem(rawValue: foodRawValue) {
+            draggedFood = Food(name: foodItem, size: CGSize(width: 50, height: 50))
             if let draggedFood = draggedFood {
                 draggedFood.position = location
                 addChild(draggedFood)
             }
-        } else if atPoint(location).name == "FoodSourceRice" {
-            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-            draggedFood = Food(name: .Rice, size: CGSize(width: 32, height: 32))
-            if let draggedFood = draggedFood {
-                draggedFood.position = location
-                addChild(draggedFood)
-            }
+            
+//            //change this for food source (reminder for myself so its easier to find)
+//            
+//            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+//            //draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
+//            draggedFood = Food(name: .WholeFish, size: CGSize(width: 32, height: 32))
+//            if let draggedFood = draggedFood {
+//                draggedFood.position = location
+//                addChild(draggedFood)
+//            }
+//        } else if atPoint(location).name == "FoodSourceRice" {
+//            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
+//            draggedFood = Food(name: .Rice, size: CGSize(width: 32, height: 32))
+//            if let draggedFood = draggedFood {
+//                draggedFood.position = location
+//                addChild(draggedFood)
+//            }
         }else {
             let tileMaplocation = touch.location(in: tileMap)
             let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
