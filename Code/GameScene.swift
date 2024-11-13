@@ -223,23 +223,6 @@ class GameScene: SKScene {
                 draggedFood.position = location
                 addChild(draggedFood)
             }
-            
-//            //change this for food source (reminder for myself so its easier to find)
-//            
-//            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-//            //draggedFood = Food(name: .Pot, size: CGSize(width: 32, height: 32))
-//            draggedFood = Food(name: .WholeFish, size: CGSize(width: 32, height: 32))
-//            if let draggedFood = draggedFood {
-//                draggedFood.position = location
-//                addChild(draggedFood)
-//            }
-//        } else if atPoint(location).name == "FoodSourceRice" {
-//            //            draggedFood = Food(name: .SteakRaw, size: CGSize(width: 32, height: 32))
-//            draggedFood = Food(name: .Rice, size: CGSize(width: 32, height: 32))
-//            if let draggedFood = draggedFood {
-//                draggedFood.position = location
-//                addChild(draggedFood)
-//            }
         }else {
             let tileMaplocation = touch.location(in: tileMap)
             let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
@@ -248,7 +231,7 @@ class GameScene: SKScene {
             if let food = foodOnTile[tilePosition] {
                 draggedFood = food
                 
-                if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier) {
+                if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier), action == .Cut {
                     cuttingInProgress = true
                     cuttingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
                         food.updateFoodItem(foodItem: slicedFood)
