@@ -59,7 +59,9 @@ class GameScene: SKScene {
     var customerGeneratorTimer: Timer?
     
     var cuttingTimer: Timer?
+    var portionTimer: Timer?
     var cuttingInProgress = false
+    var portionInProgress = false
     
     private let columns = 10
     private let rows = 10
@@ -75,7 +77,7 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
         super.sceneDidLoad()
         tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
-        foodSourceToolbar = self.childNode(withName: "FoodSourceToolbar") as? SKNode
+        foodSourceToolbar = self.childNode(withName: "FoodSourceToolbar")
         setupScoreLabel()
         customerGeneratorTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(baseCustomerSpawnRate), repeats: false) { [weak self] _ in
             print("Resrving table")
@@ -242,6 +244,27 @@ class GameScene: SKScene {
                     food.position = location
                 }
                 
+                //portion
+                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion {
+                    portionInProgress = true
+                    
+                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
+                        if let newPortionedFood = food.portionCounter() {
+                            self.draggedFood = newPortionedFood
+                            self.draggedFood?.position = location
+                            self.addChild(newPortionedFood)
+                            
+                        } else {
+                            self.foodOnTile[food.position] = nil
+                        }
+                        return
+                    }
+                    self.portionInProgress = false
+                    food.createTimerGuage(time: 1)
+                } else {
+                    food.position = location
+                }
+                
                 food.stopCooking()
                 foodOnTile[tilePosition] = nil
                 touchesBeganLocation = TilePoint(x: column, y: row) }
@@ -263,6 +286,17 @@ class GameScene: SKScene {
             if distance > 50 {
                 cuttingTimer?.invalidate()
                 cuttingInProgress = false
+                draggedFood.removeTimerGuage()
+            } else {
+                return
+            }
+        }
+        if portionInProgress {
+            // calculate distance from original location
+            let distance = sqrt(pow(location.x - draggedFood.position.x, 2) + pow(location.y - draggedFood.position.y, 2))
+            if distance > 50 {
+                portionTimer?.invalidate()
+                portionInProgress = false
                 draggedFood.removeTimerGuage()
             } else {
                 return
@@ -291,6 +325,7 @@ class GameScene: SKScene {
         let tilePosition = CGPoint(x: column, y: row)
         
         cuttingTimer?.invalidate()
+        portionTimer?.invalidate()
         draggedFood.removeTimerGuage()
         
         if let tileGroup = tileMap.tileGroup(atColumn: column, row: row) {
@@ -415,6 +450,7 @@ class GameScene: SKScene {
     func incrementScore(by points: Int) {
         score += points
     }
+
     
     deinit {
         print("GameScene deinited")

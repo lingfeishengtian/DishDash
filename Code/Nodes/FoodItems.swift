@@ -24,7 +24,7 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         case .steak:
             return 0...2
         case .sushi:
-            return 1003...1007
+            return 1003...1008
         default:
             return 0...999
         }
@@ -40,7 +40,7 @@ enum FoodOrderCategory: Int {
         case .Steak:
             return [.SteakRaw]
         case .Sushi:
-            return [.WholeFish, .Rice, .Pot]
+            return [.WholeFish, .Rice, .Pot,]
         }
     }
 }
@@ -63,6 +63,7 @@ enum FoodItem: Int, CaseIterable {
     
     case WholeFish = 1006
     case SlicedFish = 1007
+    case Sashimi = 1008
     
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
@@ -95,6 +96,8 @@ enum FoodItem: Int, CaseIterable {
             return "WholeFish"
         case .SlicedFish:
             return "SlicedFish"
+        case .Sashimi:
+            return "Sashimi"
         }
     }
     
@@ -126,6 +129,8 @@ enum FoodItem: Int, CaseIterable {
             return "WholeFish"
         case .SlicedFish:
             return "SlicedFish"
+        case .Sashimi:
+            return "Sashimi"
         }
     }
     
@@ -148,6 +153,7 @@ enum Action: Int {
     case Mix = 1
     case Cut = 2
     case Puree = 3
+    case Portion = 4
     
     
     case WaterFill = 20
@@ -174,6 +180,9 @@ enum StoveOperation: Int {
         }
     }
 }
+
+
+
 
 /// Recipes are a set of actions defined that takes in two ingredients and produces a final product
 struct Recipe {
@@ -202,6 +211,8 @@ struct Recipe {
             return (.WaterFill, .PotRawRiceWater)
         case .WholeFish:
             return (.Cut, .SlicedFish)
+        case .SlicedFish:
+            return (.Portion, .Sashimi)
         default:
             return nil
         }
@@ -225,7 +236,14 @@ struct Recipe {
             return nil
         }
     }
+    static func portionNum(for portion: FoodItem) -> Int? {
+        switch portion {
+        case .SlicedFish:
+            return 5
+        default:
+            return nil
+        }
+    }
 }
 
-//combining items makes original items inivisble
-//need to hold to cut instead of tapping and waiting
+

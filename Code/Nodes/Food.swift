@@ -12,10 +12,11 @@ class Food: SKSpriteNode {
     var foodIdentifier: FoodItem
     var isIngredient: Bool
     var isFinalProduct: Bool
+    var portion: Int = 0
     private var cookingStage: Int = 0
     private var cookingTimer: Timer?
     
-    init(name: FoodItem, size: CGSize, isIngredient: Bool = true, isFinalProduct: Bool = false) {
+    init(name: FoodItem, size: CGSize, isIngredient: Bool = true, isFinalProduct: Bool = false) { //portion
         self.foodIdentifier = name
         self.isIngredient = isIngredient
         self.isFinalProduct = isFinalProduct
@@ -35,13 +36,6 @@ class Food: SKSpriteNode {
             }
         }
     }
-//    func startSlice() {
-//        if foodIdentifier == .WholeFish {
-//            cookingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] _ in
-//                self?.updateFoodItem(foodItem: .SlicedFish, shouldSlice: false)
-//            }
-//        }
-//    }
     
     private var timerGuage: SKSpriteNode?
     func createTimerGuage(time: Int) {
@@ -57,7 +51,7 @@ class Food: SKSpriteNode {
         timerGuage?.removeFromParent()
     }
     
-    func updateFoodItem(foodItem: FoodItem, shouldCook: Bool = false) {
+    func updateFoodItem(foodItem: FoodItem, shouldCook: Bool = false) { // update portion
         self.foodIdentifier = foodItem
         self.texture = SKTexture(imageNamed: foodItem.assetName)
         stopCooking()
@@ -65,6 +59,15 @@ class Food: SKSpriteNode {
         if shouldCook {
             startCooking()
         }
+        
+        let portionOp = Recipe.action(for:foodIdentifier)
+        if let p = Recipe.portionNum(for: foodIdentifier), portionOp?.action == .Portion {
+            self.portion = p
+        }
+        else {
+            self.portion = 0
+        }
+        
     }
     
     func stopCooking() {
@@ -78,4 +81,23 @@ class Food: SKSpriteNode {
             updateFoodItem(foodItem: sinkOperation!.result)
         }
     }
+    // have portion counter, return new food, get rid of original food item
+    //counter variable, no parameters and
+    //if counter = 0 then remove from parent and remove references
+    //detect if item is portionable and decrease counter when portioned in Gamescene
+    func portionCounter() -> Food? {
+        let portionOp = Recipe.action(for:foodIdentifier)
+        if portionOp?.action == .Portion {
+            let portionedFood = Food(name: portionOp!.result, size: .init(width: 50, height: 50))
+            guard self.portion > 0 else { return nil }
+            self.portion -= 1
+            if self.portion == 0 {
+                self.removeFromParent()
+                return nil
+            }
+            return portionedFood
+        }
+        return nil
+    }
+    
 }
