@@ -262,11 +262,10 @@ class GameScene: SKScene {
                     self.portionInProgress = false
                     food.createTimerGuage(time: 1)
                 } else {
-                    food.position = location
+                    foodOnTile[tilePosition] = nil
                 }
                 
                 food.stopCooking()
-                foodOnTile[tilePosition] = nil
                 touchesBeganLocation = TilePoint(x: column, y: row) }
         }
     
