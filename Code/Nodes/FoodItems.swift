@@ -24,7 +24,7 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         case .steak:
             return 0...2
         case .sushi:
-            return 1003...1009
+            return 1008...1009
         default:
             return 0...999
         }
