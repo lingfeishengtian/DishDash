@@ -152,7 +152,7 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-        //        showLosingScreen()
+                showLosingScreen()
     }
     
     var background: SKShapeNode!
@@ -251,7 +251,7 @@ class GameScene: SKScene {
                     portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
                         if let newPortionedFood = food.portionCounter() {
                             self.draggedFood = newPortionedFood
-                            self.draggedFood?.position = location
+                            //self.draggedFood?.position = location
                             self.addChild(newPortionedFood)
                             
                         } else {
@@ -259,6 +259,7 @@ class GameScene: SKScene {
                         }
                         return
                     }
+                    
                     self.portionInProgress = false
                     food.createTimerGuage(time: 1)
                 } else {

@@ -24,7 +24,7 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         case .steak:
             return 0...2
         case .sushi:
-            return 1003...1008
+            return 1003...1009
         default:
             return 0...999
         }
@@ -64,6 +64,7 @@ enum FoodItem: Int, CaseIterable {
     case WholeFish = 1006
     case SlicedFish = 1007
     case Sashimi = 1008
+    case Nigiri = 1009
     
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
@@ -98,6 +99,8 @@ enum FoodItem: Int, CaseIterable {
             return "SlicedFish"
         case .Sashimi:
             return "Sashimi"
+        case .Nigiri:
+            return "Nigiri"
         }
     }
     
@@ -131,6 +134,8 @@ enum FoodItem: Int, CaseIterable {
             return "SlicedFish"
         case .Sashimi:
             return "Sashimi"
+        case .Nigiri:
+            return "Nigiri"
         }
     }
     
@@ -232,6 +237,8 @@ struct Recipe {
             return .PotRawRiceWater
         case (.Pot, .Rice):
             return .PotRawRice
+        case (.Sashimi, .PotCookedRice):
+            return .Nigiri
         default:
             return nil
         }
@@ -240,6 +247,8 @@ struct Recipe {
         switch portion {
         case .SlicedFish:
             return 5
+        case .PotCookedRice:
+            return 10
         default:
             return nil
         }
