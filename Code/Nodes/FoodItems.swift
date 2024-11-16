@@ -24,7 +24,7 @@ struct OrderableFoodRandomSelectionOptions: OptionSet {
         case .steak:
             return 0...2
         case .sushi:
-            return 1008...1009
+            return 1008...1010
         default:
             return 0...999
         }
@@ -40,7 +40,7 @@ enum FoodOrderCategory: Int {
         case .Steak:
             return [.SteakRaw]
         case .Sushi:
-            return [.WholeFish, .Rice, .Pot,]
+            return [.WholeFish, .Rice, .Pot, .Knife]
         }
     }
 }
@@ -58,14 +58,16 @@ enum FoodItem: Int, CaseIterable {
     case PotRawRice = 1002
     case PotRawRiceWater = 1003
     case PotCookedRice = 1004
+    case Riceball = 1006
     
     case Rice = 1005
     
-    case WholeFish = 1006
-    case SlicedFish = 1007
-    case Sashimi = 1008
-    case Nigiri = 1009
+    case WholeFish = 1007
+    case SlicedFish = 1008
+    case Sashimi = 1009
+    case Nigiri = 1010
     
+    case Knife = 100
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
     
@@ -101,6 +103,10 @@ enum FoodItem: Int, CaseIterable {
             return "Sashimi"
         case .Nigiri:
             return "Nigiri"
+        case .Knife:
+            return "Knife"
+        case .Riceball:
+            return "Riceball"
         }
     }
     
@@ -136,6 +142,10 @@ enum FoodItem: Int, CaseIterable {
             return "Sashimi"
         case .Nigiri:
             return "Nigiri"
+        case .Knife:
+            return "Knife"
+        case .Riceball:
+            return "Riceball"
         }
     }
     
@@ -214,10 +224,13 @@ struct Recipe {
             return (.WaterFill, .PotWater)
         case .PotRawRice:
             return (.WaterFill, .PotRawRiceWater)
-        case .WholeFish:
-            return (.Cut, .SlicedFish)
-        case .SlicedFish:
-            return (.Portion, .Sashimi)
+//        case .WholeFish:
+//            return (.Cut, .SlicedFish)
+//        case .SlicedFish:
+//            return (.Portion, .Sashimi)
+//        case .PotCookedRice:
+//            return (.Portion, .Riceball)
+        
         default:
             return nil
         }
@@ -237,22 +250,24 @@ struct Recipe {
             return .PotRawRiceWater
         case (.Pot, .Rice):
             return .PotRawRice
-        case (.Sashimi, .PotCookedRice):
+        case (.SlicedFish, .PotCookedRice):
             return .Nigiri
+        case (.Knife, .WholeFish):
+            return .SlicedFish
         default:
             return nil
         }
     }
-    static func portionNum(for portion: FoodItem) -> Int? {
-        switch portion {
-        case .SlicedFish:
-            return 5
-        case .PotCookedRice:
-            return 10
-        default:
-            return nil
-        }
-    }
+//    static func portionNum(for portion: FoodItem) -> Int? {
+//        switch portion {
+//        case .SlicedFish:
+//            return 5
+//        case .PotCookedRice:
+//            return 10
+//        default:
+//            return nil
+//        }
+//    }
 }
 
 

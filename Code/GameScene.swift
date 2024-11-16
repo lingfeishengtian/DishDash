@@ -14,6 +14,7 @@ enum TileType: String, CaseIterable {
     case floor = "Floor"
     case table = "Table"
     case sink = "Sink"
+    case trashcan = "Trashcan"
     
     var color: UIColor {
         switch self {
@@ -27,6 +28,8 @@ enum TileType: String, CaseIterable {
             return .brown
         case .sink:
             return .cyan
+        case .trashcan:
+            return .red
         }
     }
 }
@@ -152,7 +155,7 @@ class GameScene: SKScene {
     
     // TODO: Implement loseGame
     func loseGame() {
-                showLosingScreen()
+               // showLosingScreen()
     }
     
     var background: SKShapeNode!
@@ -238,6 +241,7 @@ class GameScene: SKScene {
                     cuttingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
                         food.updateFoodItem(foodItem: slicedFood)
                         return
+                    
                     }
                     food.createTimerGuage(time: 3)
                 } else {
@@ -245,27 +249,29 @@ class GameScene: SKScene {
                 }
                 
                 //portion
-                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion {
-                    portionInProgress = true
-                    
-                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
-                        if let newPortionedFood = food.portionCounter() {
-                            self.draggedFood = newPortionedFood
-                            //self.draggedFood?.position = location
-                            self.addChild(newPortionedFood)
-                            
-                        } else {
-                            self.foodOnTile[food.position] = nil
-                        }
-                        return
-                    }
-                    
-                    self.portionInProgress = false
-                    food.createTimerGuage(time: 1)
-                } else {
-                    foodOnTile[tilePosition] = nil
-                }
-                
+//                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion
+//                {
+//                    portionInProgress = true
+//                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
+//                        if let portionedFood = food.portionCounter() {
+//                            self.draggedFood = portionedFood
+//                            self.addChild(portionedFood)
+//                            if portionedFood.portion == 0{
+//                                food.removeFromParent()
+//                                self.foodOnTile.removeValue(forKey: tilePosition)
+//                                self.foodOnTile[tilePosition] = nil
+//                            }
+//                        }
+//                        else {
+//                            self.foodOnTile[food.position] = nil
+//                        }
+//                        return
+//                    }
+//                    food.createTimerGuage(time: 1)
+//                    
+//                } else {
+//                    foodOnTile[tilePosition] = nil
+//                }
                 food.stopCooking()
                 touchesBeganLocation = TilePoint(x: column, y: row) }
         }
@@ -280,21 +286,12 @@ class GameScene: SKScene {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood else { return }
         let location = touch.location(in: self)
-        if cuttingInProgress {
+        if cuttingInProgress || portionInProgress{
             // calculate distance from original location
             let distance = sqrt(pow(location.x - draggedFood.position.x, 2) + pow(location.y - draggedFood.position.y, 2))
             if distance > 50 {
                 cuttingTimer?.invalidate()
                 cuttingInProgress = false
-                draggedFood.removeTimerGuage()
-            } else {
-                return
-            }
-        }
-        if portionInProgress {
-            // calculate distance from original location
-            let distance = sqrt(pow(location.x - draggedFood.position.x, 2) + pow(location.y - draggedFood.position.y, 2))
-            if distance > 50 {
                 portionTimer?.invalidate()
                 portionInProgress = false
                 draggedFood.removeTimerGuage()
@@ -338,6 +335,9 @@ class GameScene: SKScene {
                 eventItemPlacedOnSink(draggedFood, at: tilePosition)
             case TileType.table.rawValue:
                 eventItemPlacedOnTable(draggedFood, at: tilePosition)
+                //fix
+            case TileType.trashcan.rawValue:
+                placeFoodOnTrashTile(draggedFood, at: tilePosition)
             default:
                 returnFoodToOriginalPosition(food: draggedFood)
             }
@@ -413,6 +413,12 @@ class GameScene: SKScene {
         }
     }
     
+    private func placeFoodOnTrashTile(_ food: Food, at tilePosition: CGPoint) {
+        food.removeFromParent()
+        foodOnTile.removeValue(forKey: tilePosition)
+        foodOnTile[tilePosition] = nil
+    }
+    
     private func eventItemPlacedOnSink(_ food: Food, at tilePosition: CGPoint) {
         if !setFoodItemDown(food, at: tilePosition) {
             return
@@ -420,6 +426,15 @@ class GameScene: SKScene {
         food.sinkEvent()
     }
     
+    func removeItemFromTile(at position: CGPoint) {
+        for (tilePosition, food) in foodOnTile {
+            if tilePosition == position {
+                food.removeFromParent()
+                foodOnTile.removeValue(forKey: tilePosition)
+                break
+                }
+            }
+        }
     
     func restartGame() {
         self.customers.removeAll()
