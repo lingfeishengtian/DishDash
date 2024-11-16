@@ -248,32 +248,9 @@ class GameScene: SKScene {
                     food.position = location
                 }
                 
-                //portion
-//                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion
-//                {
-//                    portionInProgress = true
-//                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
-//                        if let portionedFood = food.portionCounter() {
-//                            self.draggedFood = portionedFood
-//                            self.addChild(portionedFood)
-//                            if portionedFood.portion == 0{
-//                                food.removeFromParent()
-//                                self.foodOnTile.removeValue(forKey: tilePosition)
-//                                self.foodOnTile[tilePosition] = nil
-//                            }
-//                        }
-//                        else {
-//                            self.foodOnTile[food.position] = nil
-//                        }
-//                        return
-//                    }
-//                    food.createTimerGuage(time: 1)
-//                    
-//                } else {
-//                    foodOnTile[tilePosition] = nil
-//                }
                 food.stopCooking()
                 touchesBeganLocation = TilePoint(x: column, y: row) }
+            
         }
     
         
@@ -335,7 +312,6 @@ class GameScene: SKScene {
                 eventItemPlacedOnSink(draggedFood, at: tilePosition)
             case TileType.table.rawValue:
                 eventItemPlacedOnTable(draggedFood, at: tilePosition)
-                //fix
             case TileType.trashcan.rawValue:
                 placeFoodOnTrashTile(draggedFood, at: tilePosition)
             default:
@@ -416,7 +392,13 @@ class GameScene: SKScene {
     private func placeFoodOnTrashTile(_ food: Food, at tilePosition: CGPoint) {
         food.removeFromParent()
         foodOnTile.removeValue(forKey: tilePosition)
-        foodOnTile[tilePosition] = nil
+        //foodOnTile[tilePosition] = nil
+        //self.draggedFood?.removeFromParent()
+        if let touchesBeganLocation = touchesBeganLocation {
+            food.removeFromParent()
+            foodOnTile.removeValue(forKey: tilePosition)
+            foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = nil
+        }
     }
     
     private func eventItemPlacedOnSink(_ food: Food, at tilePosition: CGPoint) {
@@ -425,16 +407,6 @@ class GameScene: SKScene {
         }
         food.sinkEvent()
     }
-    
-    func removeItemFromTile(at position: CGPoint) {
-        for (tilePosition, food) in foodOnTile {
-            if tilePosition == position {
-                food.removeFromParent()
-                foodOnTile.removeValue(forKey: tilePosition)
-                break
-                }
-            }
-        }
     
     func restartGame() {
         self.customers.removeAll()
@@ -471,3 +443,29 @@ class GameScene: SKScene {
         print("GameScene deinited")
     }
 }
+
+
+//portion
+//                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion
+//                {
+//                    portionInProgress = true
+//                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
+//                        if let portionedFood = food.portionCounter() {
+//                            self.draggedFood = portionedFood
+//                            self.addChild(portionedFood)
+//                            if portionedFood.portion == 0{
+//                                food.removeFromParent()
+//                                self.foodOnTile.removeValue(forKey: tilePosition)
+//                                self.foodOnTile[tilePosition] = nil
+//                            }
+//                        }
+//                        else {
+//                            self.foodOnTile[food.position] = nil
+//                        }
+//                        return
+//                    }
+//                    food.createTimerGuage(time: 1)
+//
+//                } else {
+//                    foodOnTile[tilePosition] = nil
+//                }

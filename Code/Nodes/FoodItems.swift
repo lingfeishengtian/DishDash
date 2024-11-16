@@ -64,7 +64,7 @@ enum FoodItem: Int, CaseIterable {
     
     case WholeFish = 1007
     case SlicedFish = 1008
-    case Sashimi = 1009
+    //case Sashimi = 1009
     case Nigiri = 1010
     
     case Knife = 100
@@ -99,8 +99,8 @@ enum FoodItem: Int, CaseIterable {
             return "WholeFish"
         case .SlicedFish:
             return "SlicedFish"
-        case .Sashimi:
-            return "Sashimi"
+//        case .Sashimi:
+//            return "Sashimi"
         case .Nigiri:
             return "Nigiri"
         case .Knife:
@@ -138,8 +138,8 @@ enum FoodItem: Int, CaseIterable {
             return "WholeFish"
         case .SlicedFish:
             return "SlicedFish"
-        case .Sashimi:
-            return "Sashimi"
+//        case .Sashimi:
+//            return "Sashimi"
         case .Nigiri:
             return "Nigiri"
         case .Knife:
