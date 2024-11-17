@@ -105,7 +105,7 @@ extension GameScene {
                 if customer.order == food.foodIdentifier {
                     customer.orderSatisfied()
                     removeCustomer(customer)
-                    draggedFood?.removeFromParent()
+                    food.removeFromParent()
                     incrementScore(by: 1)
                     return
                 }
