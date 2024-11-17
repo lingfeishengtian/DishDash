@@ -10,27 +10,6 @@
 //
 import Foundation
 
-@available(*, deprecated, message: "Use FoodOrderCategory instead")
-struct OrderableFoodRandomSelectionOptions: OptionSet {
-    let rawValue: Int
-    
-    static let steak = OrderableFoodRandomSelectionOptions(rawValue: 1 << 0)
-    static let sushi = OrderableFoodRandomSelectionOptions(rawValue: 1 << 1)
-    
-    static let all = [steak, sushi]
-    
-    func idRange() -> ClosedRange<Int> {
-        switch self {
-        case .steak:
-            return 0...2
-        case .sushi:
-            return 1008...1010
-        default:
-            return 0...999
-        }
-    }
-}
-
 enum FoodOrderCategory: Int {
     case Steak = 0
     case Sushi = 1
@@ -42,6 +21,19 @@ enum FoodOrderCategory: Int {
         case .Sushi:
             return [.WholeFish, .Rice, .Pot, .Knife]
         }
+    }
+    
+    var orderableItems: [FoodItem] {
+        switch self {
+        case .Steak:
+            return [.SteakRare, .SteakMedium, .SteakBurnt]
+        case .Sushi:
+            return [.SlicedFish, .Nigiri]
+        }
+    }
+    
+    static func randomOrderableItem(for category: FoodOrderCategory) -> FoodItem {
+        return category.orderableItems.randomElement()!
     }
 }
 
@@ -67,9 +59,9 @@ enum FoodItem: Int, CaseIterable {
     //case Sashimi = 1009
     case Nigiri = 1010
     
-    case Knife = 100
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
+    case Knife = 5001
     
     var assetName: String {
         switch self {
@@ -147,19 +139,6 @@ enum FoodItem: Int, CaseIterable {
         case .Riceball:
             return "Riceball"
         }
-    }
-    
-    @available(*, deprecated, message: "Use FoodOrderCategory instead")
-    static func randomOrderableItem(options: OrderableFoodRandomSelectionOptions = .steak) -> FoodItem {
-        var orderableItems = [FoodItem]()
-        
-        for item in FoodItem.allCases where
-//        item.rawValue < 1000 &&
-        options.idRange().contains(item.rawValue) {
-            orderableItems.append(item)
-        }
-        
-        return orderableItems.randomElement()!
     }
 }
 
@@ -258,16 +237,17 @@ struct Recipe {
             return nil
         }
     }
-//    static func portionNum(for portion: FoodItem) -> Int? {
-//        switch portion {
+    
+    static func portionNum(for portion: FoodItem) -> Int? {
+        switch portion {
 //        case .SlicedFish:
 //            return 5
-//        case .PotCookedRice:
-//            return 10
-//        default:
-//            return nil
-//        }
-//    }
+        case .PotCookedRice:
+            return 5
+        default:
+            return nil
+        }
+    }
 }
 
 

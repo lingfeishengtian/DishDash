@@ -10,7 +10,7 @@ import SpriteKit
 import SwiftUI
 
 struct ContentView: View {
-    let context = DishDashGameContext(dependencies: .init())
+    @StateObject var context = DishDashGameContext(dependencies: .init())
 
     var body: some View {
         ZStack {

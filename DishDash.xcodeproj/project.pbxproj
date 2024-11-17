@@ -8,13 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		968BAE4C2CDC3D4B00DBFCB2 /* DishDashGameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */; };
-		96CC8C6A2CE997DB0002E044 /* FoodOnTileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CC8C692CE997DB0002E044 /* FoodOnTileManager.swift */; };
 		96DEC1522CD97E98004F914F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1482CD97E98004F914F /* Actions.sks */; };
 		96DEC1532CD97E98004F914F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14A2CD97E98004F914F /* Assets.xcassets */; };
 		96DEC1542CD97E98004F914F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14B2CD97E98004F914F /* GameScene.sks */; };
 		96DEC1552CD97E98004F914F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */; };
 		96DEC1582CD97E98004F914F /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC14C2CD97E98004F914F /* GameScene.swift */; };
-		96DEC1592CD97E98004F914F /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC14D2CD97E98004F914F /* GameViewController.swift */; };
 		96DEC1732CD981D4004F914F /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1692CD97FAA004F914F /* GameContext.swift */; };
 		96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1682CD97FAA004F914F /* Dependencies.swift */; };
 		96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC16A2CD97FAA004F914F /* GameModeType.swift */; };
@@ -45,12 +43,10 @@
 		9637748F2CBE305B00FFFCBA /* DishDashTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DishDashTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		963774992CBE305B00FFFCBA /* DishDashUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DishDashUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishDashGameContext.swift; sourceTree = "<group>"; };
-		96CC8C692CE997DB0002E044 /* FoodOnTileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodOnTileManager.swift; sourceTree = "<group>"; };
 		96DEC1482CD97E98004F914F /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		96DEC14A2CD97E98004F914F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96DEC14B2CD97E98004F914F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		96DEC14C2CD97E98004F914F /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
-		96DEC14D2CD97E98004F914F /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		96DEC1512CD97E98004F914F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96DEC1682CD97FAA004F914F /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		96DEC1692CD97FAA004F914F /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
@@ -74,6 +70,16 @@
 		9637749C2CBE305B00FFFCBA /* DishDashUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DishDashUITests;
+			sourceTree = "<group>";
+		};
+		96CC8C6D2CE9A5E10002E044 /* GameUtils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GameUtils;
+			sourceTree = "<group>";
+		};
+		96CC8C722CE9A8910002E044 /* DataTypes */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DataTypes;
 			sourceTree = "<group>";
 		};
 		96DEC16F2CD98096004F914F /* Nodes */ = {
@@ -111,7 +117,6 @@
 		9637746D2CBE305A00FFFCBA = {
 			isa = PBXGroup;
 			children = (
-				96CC8C692CE997DB0002E044 /* FoodOnTileManager.swift */,
 				96DEC16D2CD9808F004F914F /* Code */,
 				96DEC16C2CD97FDA004F914F /* Assets */,
 				96DEC1672CD97F9F004F914F /* Base */,
@@ -155,12 +160,13 @@
 		96DEC16D2CD9808F004F914F /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				96CC8C722CE9A8910002E044 /* DataTypes */,
+				96CC8C6D2CE9A5E10002E044 /* GameUtils */,
 				96DEC16F2CD98096004F914F /* Nodes */,
 				96DEC1482CD97E98004F914F /* Actions.sks */,
 				96DEC1892CD9BE9B004F914F /* RestaurantTileSet.sks */,
 				96DEC14B2CD97E98004F914F /* GameScene.sks */,
 				96DEC14C2CD97E98004F914F /* GameScene.swift */,
-				96DEC14D2CD97E98004F914F /* GameViewController.swift */,
 				96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */,
 				968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */,
 			);
@@ -184,6 +190,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				963774782CBE305A00FFFCBA /* DishDash */,
+				96CC8C6D2CE9A5E10002E044 /* GameUtils */,
+				96CC8C722CE9A8910002E044 /* DataTypes */,
 				96DEC16F2CD98096004F914F /* Nodes */,
 			);
 			name = DishDash;
@@ -322,10 +330,8 @@
 				968BAE4C2CDC3D4B00DBFCB2 /* DishDashGameContext.swift in Sources */,
 				96DEC1732CD981D4004F914F /* GameContext.swift in Sources */,
 				96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */,
-				96CC8C6A2CE997DB0002E044 /* FoodOnTileManager.swift in Sources */,
 				96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */,
 				96DEC1762CD981D4004F914F /* GameType.swift in Sources */,
-				96DEC1592CD97E98004F914F /* GameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

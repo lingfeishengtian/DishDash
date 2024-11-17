@@ -5,6 +5,7 @@
 //  Created by Kate Zheng on 11/7/24.
 //
 import SpriteKit
+import os
 
 class Customer: SKSpriteNode{
     var order: FoodItem
@@ -12,6 +13,7 @@ class Customer: SKSpriteNode{
     private var waitingTimer: Timer?
     private var orderLabel: SKLabelNode!
     private var onPatienceRunOut: (() -> Void)
+    internal let logger = Logger(subsystem: "com.hunterhan.DishDash", category: "Customer")
     
     var tableSittingAt: TilePoint?
     
@@ -93,10 +95,15 @@ class Customer: SKSpriteNode{
                 onPatienceRunOut()
                 timer.invalidate()
             } else {
-                print("\(self.seconds) seconds left for customer")
+                logger.info("\(self.seconds) seconds left for customer")
             }
         }
         createTimerGuage(time: seconds)
+    }
+    
+    func stopCountdown() {
+        waitingTimer?.invalidate()
+        waitingTimer = nil
     }
     
     private func served() {

@@ -12,7 +12,7 @@ class Food: SKSpriteNode {
     var foodIdentifier: FoodItem
     var isIngredient: Bool
     var isFinalProduct: Bool
-    var portion: Int = 0
+    var portion: Int? = nil
     private var cookingStage: Int = 0
     private var cookingTimer: Timer?
     
@@ -60,14 +60,11 @@ class Food: SKSpriteNode {
             startCooking()
         }
         
-//        let portionOp = Recipe.action(for:foodIdentifier)
-//        if let p = Recipe.portionNum(for: foodIdentifier), portionOp?.action == .Portion {
-//            self.portion = p
-//        }
-//        else {
-//            self.portion = 0
-//        }
-        
+        if let portionCount = Recipe.portionNum(for: foodItem) {
+            self.portion = portionCount
+        } else {
+            self.portion = nil
+        }
     }
     
     func stopCooking() {
@@ -81,23 +78,12 @@ class Food: SKSpriteNode {
             updateFoodItem(foodItem: sinkOperation!.result)
         }
     }
-    // have portion counter, return new food, get rid of original food item
-    //counter variable, no parameters and
-    //if counter = 0 then remove from parent and remove references
-    //detect if item is portionable and decrease counter when portioned in Gamescene
-//    func portionCounter() -> Food? {
-//        let portionOp = Recipe.action(for:foodIdentifier)
-//        if portionOp?.action == .Portion {
-//            let portionedFood = Food(name: portionOp!.result, size: .init(width: 50, height: 50))
-//            guard self.portion > 0 else { return nil }
-//            self.portion -= 1
-//            if self.portion == 0 {
-//                self.removeFromParent()
-//                return nil
-//            }
-//            return portionedFood
-//        }
-//        return nil
-//    }
     
+    func portionSingle() {
+        if self.portion == nil {
+            return
+        }
+        
+        self.portion! -= 1
+    }
 }
