@@ -17,7 +17,7 @@
 		96DEC1742CD981D4004F914F /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1682CD97FAA004F914F /* Dependencies.swift */; };
 		96DEC1752CD981D4004F914F /* GameModeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC16A2CD97FAA004F914F /* GameModeType.swift */; };
 		96DEC1762CD981D4004F914F /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC16B2CD97FAA004F914F /* GameType.swift */; };
-		96DEC1872CD9B64F004F914F /* Assets 2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1852CD9B64F004F914F /* Assets 2.xcassets */; };
+		96DEC1872CD9B64F004F914F /* SpriteAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1852CD9B64F004F914F /* SpriteAssets.xcassets */; };
 		96DEC18A2CD9BE9B004F914F /* RestaurantTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1892CD9BE9B004F914F /* RestaurantTileSet.sks */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +52,7 @@
 		96DEC1692CD97FAA004F914F /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
 		96DEC16A2CD97FAA004F914F /* GameModeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeType.swift; sourceTree = "<group>"; };
 		96DEC16B2CD97FAA004F914F /* GameType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
-		96DEC1852CD9B64F004F914F /* Assets 2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets 2.xcassets"; sourceTree = "<group>"; };
+		96DEC1852CD9B64F004F914F /* SpriteAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SpriteAssets.xcassets; sourceTree = "<group>"; };
 		96DEC1892CD9BE9B004F914F /* RestaurantTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = RestaurantTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -152,7 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				96DEC14A2CD97E98004F914F /* Assets.xcassets */,
-				96DEC1852CD9B64F004F914F /* Assets 2.xcassets */,
+				96DEC1852CD9B64F004F914F /* SpriteAssets.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -301,7 +301,7 @@
 				96DEC1542CD97E98004F914F /* GameScene.sks in Resources */,
 				96DEC1552CD97E98004F914F /* LaunchScreen.storyboard in Resources */,
 				96DEC18A2CD9BE9B004F914F /* RestaurantTileSet.sks in Resources */,
-				96DEC1872CD9B64F004F914F /* Assets 2.xcassets in Resources */,
+				96DEC1872CD9B64F004F914F /* SpriteAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
