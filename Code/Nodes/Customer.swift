@@ -31,6 +31,20 @@ class Customer: SKSpriteNode{
         startCountdown()
     }
     
+    private var timerGuage: SKSpriteNode?
+    func createTimerGuage(time: Int) {
+        timerGuage = SKSpriteNode(color: .red, size: CGSize(width: self.size.width, height: 5))
+        timerGuage?.position = CGPoint(x: 0, y: -self.size.height / 2 - 5)
+        addChild(timerGuage!)
+        
+        let timerGuageWidth = self.size.width
+        self.timerGuage?.run(SKAction.resize(byWidth: -timerGuageWidth, height: 0, duration: Double(time)))
+    }
+    
+    func removeTimerGuage() {
+        timerGuage?.removeFromParent()
+    }
+    
     func orderSatisfied() {
         served()
         // TODO: Change status to eating and set timer
@@ -82,6 +96,7 @@ class Customer: SKSpriteNode{
                 print("\(self.seconds) seconds left for customer")
             }
         }
+        createTimerGuage(time: seconds)
     }
     
     private func served() {

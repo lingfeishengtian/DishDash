@@ -38,6 +38,20 @@ struct TilePoint: Hashable {
     let x: Int
     let y: Int
     
+    @available(*, deprecated, message: "Use init(column:row:) instead")
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+    
+    init(column: Int, row: Int) {
+        self.x = column
+        self.y = row
+    }
+    
+    var column: Int { x }
+    var row: Int { y }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)
@@ -49,7 +63,6 @@ class GameScene: SKScene {
     var gameContext: DishDashGameContext!
     //    var tileMap: RestaurantTileMap = RestaurantTileMap(columns: 10, rows: 10, frame: UIScreen.main.bounds)
     var draggedFood: Food?
-    var foodOnTile: [CGPoint: Food] = [:]
     
     var tileMap: SKTileMapNode!
     var foodSourceToolbar: SKNode!
@@ -232,8 +245,8 @@ class GameScene: SKScene {
             let tileMaplocation = touch.location(in: tileMap)
             let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
             let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
-            let tilePosition = CGPoint(x: column, y: row)
-            if let food = foodOnTile[tilePosition] {
+            let tilePosition = TilePoint(column: column, row: row)
+            if let food = getFoodOnTile(tilePosition) {
                 draggedFood = food
                 
                 if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier), action == .Cut {
@@ -286,8 +299,6 @@ class GameScene: SKScene {
             food.position = posTM
             food.scale(to: CGSize(width: 50, height: 50))
             self.addChild(food)
-            
-            foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = food
         }
     }
 
@@ -296,7 +307,7 @@ class GameScene: SKScene {
         let positionInTileMap = touch.location(in: tileMap)
         let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
         let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
-        let tilePosition = CGPoint(x: column, y: row)
+        let tilePosition = TilePoint(column: column, row: row)
         
         cuttingTimer?.invalidate()
         portionTimer?.invalidate()
@@ -328,16 +339,15 @@ class GameScene: SKScene {
         case noCombination
     }
     
-    private func setFoodItemDown(_ food: Food, at tilePosition: CGPoint) -> Bool {
+    private func setFoodItemDown(_ food: Food, at tilePosition: TilePoint) -> Bool {
         let positionInTileMap = tileMap.convert(tileMap.centerOfTile(atColumn: Int(tilePosition.x), row: Int(tilePosition.y)), to: self)
         
-        if let existingFood = foodOnTile[tilePosition] {
+        if let existingFood = getFoodOnTile(tilePosition) {
             if let combinedItem = Recipe.combineIngredients(existingFood.foodIdentifier, food.foodIdentifier) {
                 existingFood.removeFromParent()
                 food.position = positionInTileMap
                 food.updateFoodItem(foodItem: combinedItem)
                 food.scale(to: CGSize(width: 50, height: 50))
-                foodOnTile[tilePosition] = food
                 food.removeFromParent()
                 self.addChild(food)
                 return true
@@ -352,25 +362,24 @@ class GameScene: SKScene {
         self.addChild(food)
         food.position = positionInTileMap
         food.scale(to: CGSize(width: 50, height: 50))
-        foodOnTile[tilePosition] = food
         food.stopCooking()
         return true
     }
     
-    private func placeFoodOnMachineTile(_ food: Food, at tilePosition: CGPoint) {
+    private func placeFoodOnMachineTile(_ food: Food, at tilePosition: TilePoint) {
         if !setFoodItemDown(food, at: tilePosition) {
             return
         }
         food.startCooking()
     }
     
-    private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: CGPoint) {
+    private func placeFoodOnNonMachineTile(_ food: Food, at tilePosition: TilePoint) {
         if !setFoodItemDown(food, at: tilePosition) {
             return
         }
     }
     
-    private func eventItemPlacedOnTable(_ food: Food, at tilePosition: CGPoint) {
+    private func eventItemPlacedOnTable(_ food: Food, at tilePosition: TilePoint) {
         if !setFoodItemDown(food, at: tilePosition) {
             return
         }
@@ -382,26 +391,22 @@ class GameScene: SKScene {
                     removeCustomer(customer)
                     draggedFood?.removeFromParent()
                     incrementScore(by: 1)
-                    foodOnTile[tilePosition] = nil
                     return
                 }
             }
         }
     }
     
-    private func placeFoodOnTrashTile(_ food: Food, at tilePosition: CGPoint) {
+    private func placeFoodOnTrashTile(_ food: Food, at tilePosition: TilePoint) {
         food.removeFromParent()
-        foodOnTile.removeValue(forKey: tilePosition)
-        //foodOnTile[tilePosition] = nil
-        //self.draggedFood?.removeFromParent()
-        if let touchesBeganLocation = touchesBeganLocation {
-            food.removeFromParent()
-            foodOnTile.removeValue(forKey: tilePosition)
-            foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = nil
-        }
+//        if let touchesBeganLocation = touchesBeganLocation {
+//            food.removeFromParent()
+//            foodOnTile.removeValue(forKey: tilePosition)
+//            foodOnTile[CGPoint(x: touchesBeganLocation.x, y: touchesBeganLocation.y)] = nil
+//        }
     }
     
-    private func eventItemPlacedOnSink(_ food: Food, at tilePosition: CGPoint) {
+    private func eventItemPlacedOnSink(_ food: Food, at tilePosition: TilePoint) {
         if !setFoodItemDown(food, at: tilePosition) {
             return
         }
@@ -415,7 +420,6 @@ class GameScene: SKScene {
         self.customersSinceStart = 0
         self.draggedFood?.removeFromParent()
         self.draggedFood = nil
-        self.foodOnTile.removeAll()
         
         for node in self.children {
             if node != tileMap && node != scoreLabel && node.name != "FoodSource" {
@@ -443,29 +447,3 @@ class GameScene: SKScene {
         print("GameScene deinited")
     }
 }
-
-
-//portion
-//                if let (action, portionedFood) = Recipe.action(for: food.foodIdentifier), action == .Portion
-//                {
-//                    portionInProgress = true
-//                    portionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) {_ in
-//                        if let portionedFood = food.portionCounter() {
-//                            self.draggedFood = portionedFood
-//                            self.addChild(portionedFood)
-//                            if portionedFood.portion == 0{
-//                                food.removeFromParent()
-//                                self.foodOnTile.removeValue(forKey: tilePosition)
-//                                self.foodOnTile[tilePosition] = nil
-//                            }
-//                        }
-//                        else {
-//                            self.foodOnTile[food.position] = nil
-//                        }
-//                        return
-//                    }
-//                    food.createTimerGuage(time: 1)
-//
-//                } else {
-//                    foodOnTile[tilePosition] = nil
-//                }
