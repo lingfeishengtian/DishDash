@@ -31,6 +31,8 @@ extension GameScene {
         }
         
         placeFoodOnTile(food, tilePosition)
+        //food.createPortionLabel()
+        food.updatePortionLabel()
         onAction(tutorialAction: .action(food.foodIdentifier, tileGroup(at: tilePosition)))
         return true
     }
@@ -51,13 +53,13 @@ extension GameScene {
         
         if let incomingPortionCount = incomingFood.portion, incomingPortionCount > 0 {
             existingFood.updateFoodItem(foodItem: resultingItem)
-            
+            existingFood.updatePortionLabel()
             if let prevTouches = touchesBeganLocation {
                 placeFoodOnTile(incomingFood, prevTouches)
             }
         } else if let existingPortionCount = existingFood.portion, existingPortionCount > 0 {
             incomingFood.updateFoodItem(foodItem: resultingItem)
-            
+            existingFood.updatePortionLabel()
             if let prevTouches = touchesBeganLocation {
                 placeFoodOnTile(incomingFood, prevTouches)
             }

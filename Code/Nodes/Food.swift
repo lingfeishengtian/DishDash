@@ -12,9 +12,14 @@ class Food: SKSpriteNode {
     var foodIdentifier: FoodItem
     var isIngredient: Bool
     var isFinalProduct: Bool
-    var portion: Int? = nil
+    var portion: Int? = nil{
+        didSet {
+            updatePortionLabel()
+        }
+    }
     private var cookingStage: Int = 0
     private var cookingTimer: Timer?
+    private var portionLabel: SKLabelNode?
     
     /// When this item is reached, stop cooking
     var cookOverride: FoodItem?
@@ -26,6 +31,7 @@ class Food: SKSpriteNode {
         let texture = SKTexture(imageNamed: name.assetName)
         
         super.init(texture: texture, color: .clear, size: size)
+        createPortionLabel()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -99,5 +105,23 @@ class Food: SKSpriteNode {
         }
         
         self.portion! -= 1
+        updatePortionLabel()
+    }
+    func createPortionLabel() {
+        portionLabel = SKLabelNode(fontNamed: "Arial")
+        portionLabel?.fontSize = 14
+        portionLabel?.fontColor = .white
+        portionLabel?.position = CGPoint(x: 0, y: -self.size.height / 2 - 20)
+        portionLabel?.zPosition = 1
+        addChild(portionLabel!)
+    }
+    
+    func updatePortionLabel() {
+        if let portionCount = portion {
+            portionLabel?.text = "Portions: \(portionCount)"
+            portionLabel?.isHidden = false
+        } else {
+            portionLabel?.isHidden = true
+        }
     }
 }
