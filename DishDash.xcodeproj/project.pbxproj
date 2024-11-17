@@ -11,7 +11,7 @@
 		96CC8C822CE9C9890002E044 /* SKSpriteNode+GlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CC8C812CE9C9890002E044 /* SKSpriteNode+GlowEffect.swift */; };
 		96DEC1522CD97E98004F914F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC1482CD97E98004F914F /* Actions.sks */; };
 		96DEC1532CD97E98004F914F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14A2CD97E98004F914F /* Assets.xcassets */; };
-		96DEC1542CD97E98004F914F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14B2CD97E98004F914F /* GameScene.sks */; };
+		96DEC1542CD97E98004F914F /* DishDashGameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14B2CD97E98004F914F /* DishDashGameScene.sks */; };
 		96DEC1552CD97E98004F914F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */; };
 		96DEC1582CD97E98004F914F /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC14C2CD97E98004F914F /* GameScene.swift */; };
 		96DEC1732CD981D4004F914F /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DEC1692CD97FAA004F914F /* GameContext.swift */; };
@@ -47,7 +47,7 @@
 		96CC8C812CE9C9890002E044 /* SKSpriteNode+GlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKSpriteNode+GlowEffect.swift"; sourceTree = "<group>"; };
 		96DEC1482CD97E98004F914F /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		96DEC14A2CD97E98004F914F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		96DEC14B2CD97E98004F914F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		96DEC14B2CD97E98004F914F /* DishDashGameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DishDashGameScene.sks; sourceTree = "<group>"; };
 		96DEC14C2CD97E98004F914F /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		96DEC1512CD97E98004F914F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96DEC1682CD97FAA004F914F /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 				96DEC16F2CD98096004F914F /* Nodes */,
 				96DEC1482CD97E98004F914F /* Actions.sks */,
 				96DEC1892CD9BE9B004F914F /* RestaurantTileSet.sks */,
-				96DEC14B2CD97E98004F914F /* GameScene.sks */,
+				96DEC14B2CD97E98004F914F /* DishDashGameScene.sks */,
 				96DEC14C2CD97E98004F914F /* GameScene.swift */,
 				96DEC14E2CD97E98004F914F /* LaunchScreen.storyboard */,
 				968BAE4B2CDC3D4B00DBFCB2 /* DishDashGameContext.swift */,
@@ -301,7 +301,7 @@
 			files = (
 				96DEC1522CD97E98004F914F /* Actions.sks in Resources */,
 				96DEC1532CD97E98004F914F /* Assets.xcassets in Resources */,
-				96DEC1542CD97E98004F914F /* GameScene.sks in Resources */,
+				96DEC1542CD97E98004F914F /* DishDashGameScene.sks in Resources */,
 				96DEC1552CD97E98004F914F /* LaunchScreen.storyboard in Resources */,
 				96DEC18A2CD9BE9B004F914F /* RestaurantTileSet.sks in Resources */,
 				96DEC1872CD9B64F004F914F /* SpriteAssets.xcassets in Resources */,

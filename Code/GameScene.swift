@@ -31,6 +31,13 @@ class GameScene: SKScene {
     
     var tutorialActionSequence: [TutorialAction] = []
     var currentTutorialPhase: TutorialAction? = nil
+    var shouldBeginTutorial: Bool = true
+    
+    convenience init(gameContext: DishDashGameContext, shouldBeginTutorial: Bool) {
+        self.init(fileNamed: "DishDashGameScene")!
+        self.gameContext = gameContext
+        self.shouldBeginTutorial = shouldBeginTutorial
+    }
     
     internal var queuedCustomersOutside: [Customer] = []
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
@@ -58,13 +65,14 @@ class GameScene: SKScene {
         setupScoreLabel()
         startNewCustomerTimer()
         generateFoodSourcesToolbar()
-        initiateTutorial()
     }
     
-    //lol i cant get it in view without this, figure this out later
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         setupScoreLabel()
+        if shouldBeginTutorial {
+            initiateTutorial()
+        }
     }
     
     var background: SKShapeNode!

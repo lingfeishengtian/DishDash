@@ -10,9 +10,10 @@ import SpriteKit
 import SwiftUI
 
 class DishDashGameContext: GameContext {
+    let shouldBeginTutorial: Bool = true
+    
     override init(dependencies deps: Dependencies) {
         super.init(dependencies: deps)
-        scene = GameScene(fileNamed: "GameScene")!
-        (scene?.scene as? GameScene)?.gameContext = self
+        scene = GameScene(gameContext: self, shouldBeginTutorial: shouldBeginTutorial)
     }
 }
