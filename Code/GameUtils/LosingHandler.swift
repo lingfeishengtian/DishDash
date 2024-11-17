@@ -39,11 +39,7 @@ extension GameScene {
     }
     
     func removeAllFoodItemsFromScene() {
-        for child in children {
-            if let food = child as? Food {
-                food.removeFromParent()
-            }
-        }
+        getAllFoodOnscreen().forEach { $0.removeFromParent() }
     }
     
     func loseGame() {

@@ -7,8 +7,6 @@
 
 import Foundation
 
-fileprivate let sizeOfFoodSprites: CGSize = CGSize(width: 50, height: 50)
-
 extension GameScene {
     /// Get all available positions of a tile group
     func getPositionsOfTileGroup(for tileType: TileType) -> [TilePoint] {

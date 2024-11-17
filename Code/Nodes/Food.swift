@@ -16,6 +16,9 @@ class Food: SKSpriteNode {
     private var cookingStage: Int = 0
     private var cookingTimer: Timer?
     
+    /// When this item is reached, stop cooking
+    var cookOverride: FoodItem?
+    
     init(name: FoodItem, size: CGSize, isIngredient: Bool = true, isFinalProduct: Bool = false) { //portion
         self.foodIdentifier = name
         self.isIngredient = isIngredient
@@ -32,8 +35,13 @@ class Food: SKSpriteNode {
     func startCooking() {
         if let (stoveOperation, resultingFoodItem) = Recipe.stoveOperation(for: foodIdentifier) {
             cookingTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(stoveOperation.timeNeeded), repeats: false) { [weak self] _ in
-                self?.updateFoodItem(foodItem: resultingFoodItem, shouldCook: true)
+                // Notify tutorial that food is cooked
+                if let parent = self?.parent as? GameScene, let self {
+                    parent.onAction(tutorialAction: .cook(self.foodIdentifier))
+                }
+                self?.updateFoodItem(foodItem: resultingFoodItem, shouldCook: self?.foodIdentifier != self?.cookOverride)
             }
+            createTimerGuage(time: stoveOperation.timeNeeded)
         }
     }
     
@@ -65,9 +73,15 @@ class Food: SKSpriteNode {
         } else {
             self.portion = nil
         }
+        
+        // Update tutorial highlights
+        if let parent = self.parent as? GameScene {
+            parent.updateHighlights()
+        }
     }
     
     func stopCooking() {
+        removeTimerGuage()
         cookingTimer?.invalidate()
         cookingTimer = nil
     }

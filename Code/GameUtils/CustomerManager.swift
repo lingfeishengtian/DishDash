@@ -40,17 +40,25 @@ extension GameScene {
         }
     }
     
+    func addCustomer(_ customer: Customer) -> Bool {
+        if let reservedTable = reserveTable(for: customer) {
+            customer.position = reservedTable
+            self.addChild(customer)
+            
+            customersAtTables.append(customer)
+            return true
+        }
+        
+        return false
+    }
+    
     func addCustomer() {
-        let newCustomer = Customer(order: FoodOrderCategory.randomOrderableItem(for: .Sushi), timeLimit: timeLimitForCustomer(), size: CGSize(width: 50, height: 50)) {
+        let newCustomer = Customer(order: FoodOrderCategory.randomOrderableItem(for: foodCategory), timeLimit: timeLimitForCustomer(), size: CGSize(width: 50, height: 50)) {
             self.logger.info("Customer left")
             self.loseGame()
         }
         
-        if let reservedTable = reserveTable(for: newCustomer) {
-            newCustomer.position = reservedTable
-            self.addChild(newCustomer)
-            
-            customersAtTables.append(newCustomer)
+        if addCustomer(newCustomer) {
             customersSinceStart += 1
             
             startNewCustomerTimer()

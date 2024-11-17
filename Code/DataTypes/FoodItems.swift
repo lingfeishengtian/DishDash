@@ -32,6 +32,40 @@ enum FoodOrderCategory: Int {
         }
     }
     
+    var tutorialSequence: [TutorialAction] {
+        switch self {
+        case .Steak:
+            return [
+                .action(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .serve(.SteakRare),
+                .action(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .cook(.SteakRare),
+                .serve(.SteakMedium),
+                .action(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .cook(.SteakRare),
+                .cook(.SteakMedium),
+                .serve(.SteakBurnt)
+            ]
+        case .Sushi:
+            return [
+                .action(.WholeFish, .counter),
+                .combine(.WholeFish, .Knife),
+                .serve(.SlicedFish),
+                .action(.WholeFish, .counter),
+                .combine(.WholeFish, .Knife),
+                .action(.Pot, .sink),
+                .combine(.PotWater, .Rice),
+                .action(.PotRawRiceWater, .machine),
+                .cook(.PotRawRiceWater),
+                .combine(.SlicedFish, .PotCookedRice),
+                .serve(.Nigiri)
+            ]
+        }
+    }
+    
     static func randomOrderableItem(for category: FoodOrderCategory) -> FoodItem {
         return category.orderableItems.randomElement()!
     }
@@ -39,25 +73,26 @@ enum FoodOrderCategory: Int {
 
 enum FoodItem: Int, CaseIterable {
     /// Orderable Items have IDs < 1000
-    case SteakRaw = 2000
     case SteakRare = 0
     case SteakMedium = 1
     case SteakBurnt = 2 // Well Done for insane people thats my dad :(
     
+    case SlicedFish = 3
+    //case Sashimi = 4
+    case Nigiri = 5
+    
     /// Cooking Assets have 1000 <= ID < 5000
+    case SteakRaw = 2000
+    
     case Pot = 1000
     case PotWater = 1001
     case PotRawRice = 1002
     case PotRawRiceWater = 1003
     case PotCookedRice = 1004
+    
     case Riceball = 1006
-    
-    case Rice = 1005
-    
     case WholeFish = 1007
-    case SlicedFish = 1008
-    //case Sashimi = 1009
-    case Nigiri = 1010
+    case Rice = 1005
     
     /// Misc Items have IDs >= 5000
     case BurntBlock = 5000
@@ -249,5 +284,3 @@ struct Recipe {
         }
     }
 }
-
-

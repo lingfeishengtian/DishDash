@@ -50,6 +50,10 @@ class Customer: SKSpriteNode{
     func orderSatisfied() {
         served()
         // TODO: Change status to eating and set timer
+        // Notify tutorial that food is served
+        if let parent = self.parent as? GameScene {
+            parent.onAction(tutorialAction: .serve(order))
+        }
         self.removeFromParent()
     }
     
@@ -87,6 +91,10 @@ class Customer: SKSpriteNode{
     }
     
     private func startCountdown() {
+        if seconds < 0 {
+            return
+        }
+        
         waitingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.seconds -= 1

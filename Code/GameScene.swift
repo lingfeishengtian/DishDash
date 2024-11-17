@@ -29,6 +29,9 @@ class GameScene: SKScene {
     var cuttingInProgress = false
     var portionInProgress = false
     
+    var tutorialActionSequence: [TutorialAction] = []
+    var currentTutorialPhase: TutorialAction? = nil
+    
     internal var queuedCustomersOutside: [Customer] = []
     /// Main actor prevents multiple timers from doing unexpected behavior to this array
     @MainActor internal var customersAtTables: [Customer] = []
@@ -46,6 +49,8 @@ class GameScene: SKScene {
         }
     }
     
+    let sizeOfFoodSprites: CGSize = CGSize(width: 50, height: 50)
+    
     override func sceneDidLoad() {
         super.sceneDidLoad()
         tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
@@ -53,6 +58,7 @@ class GameScene: SKScene {
         setupScoreLabel()
         startNewCustomerTimer()
         generateFoodSourcesToolbar()
+        initiateTutorial()
     }
     
     //lol i cant get it in view without this, figure this out later

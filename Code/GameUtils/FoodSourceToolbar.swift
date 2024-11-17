@@ -10,7 +10,7 @@ import SpriteKit
 
 extension GameScene {
     func generateFoodSourcesToolbar() {
-        let sources = FoodOrderCategory.Sushi.foodSources
+        let sources = foodCategory.foodSources
         let widthOfToolbar = foodSourceToolbar.frame.width
         let spacing = widthOfToolbar / CGFloat(sources.count)
         

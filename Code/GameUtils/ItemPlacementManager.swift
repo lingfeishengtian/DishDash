@@ -31,6 +31,7 @@ extension GameScene {
         }
         
         placeFoodOnTile(food, tilePosition)
+        onAction(tutorialAction: .action(food.foodIdentifier, tileGroup(at: tilePosition)))
         return true
     }
     
@@ -45,6 +46,8 @@ extension GameScene {
         
         incomingFood.portionSingle()
         existingFood.portionSingle()
+        
+        onAction(tutorialAction: .combine(incomingFood.foodIdentifier, existingFood.foodIdentifier))
         
         if let incomingPortionCount = incomingFood.portion, incomingPortionCount > 0 {
             existingFood.updateFoodItem(foodItem: resultingItem)
@@ -91,5 +94,9 @@ extension GameScene {
     
     func eventItemPlacedOnSink(_ food: Food, at tilePosition: TilePoint) {
         food.sinkEvent()
+    }
+    
+    func getAllFoodOnscreen() -> [Food] {
+        return children.compactMap { $0 as? Food }
     }
 }
