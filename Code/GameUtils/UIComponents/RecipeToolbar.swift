@@ -45,6 +45,10 @@ extension GameScene {
                 break
             case .serve(_):
                 break
+            case .grabSourceToTile(_, _):
+                break
+            case .grabSourceToFoodItem(_, _):
+                break
             }
         }
     }

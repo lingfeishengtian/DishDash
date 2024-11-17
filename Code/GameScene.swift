@@ -67,27 +67,9 @@ class GameScene: SKScene {
         generateFoodSourcesToolbar()
         setupRecipeToolbar()
         
-        let sinkPositions = getPositionsOfTileGroup(for: .sink)
-        sinkPositions.forEach { position in
-            let label = SKLabelNode(text: "Sink")
-            label.position = convertTilePointToGameSceneCoords(position)
-            label.position.y -= 20
-            label.zPosition = 8
-            label.fontSize = 20
-            label.fontColor = .black
-            addChild(label)
-        }
-        
-        let counterPositions = getPositionsOfTileGroup(for: .counter)
-        counterPositions.forEach { position in
-            let label = SKLabelNode(text: "Counter")
-            label.position = convertTilePointToGameSceneCoords(position)
-            label.position.y -= 20
-            label.zPosition = 8
-            label.fontSize = 10
-            label.fontColor = .black
-            addChild(label)
-        }
+#if DEBUG
+        drawDebugTiles()
+#endif
     }
     
     override func didMove(to view: SKView) {
@@ -125,6 +107,8 @@ class GameScene: SKScene {
                 touchesBeganLocation = tilePosition
             }
         }
+        
+        updateHighlights()
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -136,14 +120,21 @@ class GameScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood, let tilePosition = tilePosition(for: touch) else { return }
         
-        cuttingTimer?.invalidate()
-        portionTimer?.invalidate()
-        draggedFood.removeTimerGuage()
-        
-        let itemsToFireEvents = setFoodItemDown(draggedFood, at: tilePosition)
-        itemsToFireEvents.forEach { fireTileEvent($0) }
+        if tileMap.frame.contains(touch.location(in: self)) {
+            cuttingTimer?.invalidate()
+            portionTimer?.invalidate()
+            draggedFood.removeTimerGuage()
+            
+            let itemsToFireEvents = setFoodItemDown(draggedFood, at: tilePosition)
+            itemsToFireEvents.forEach { item in
+                fireTileEvent(item)
+            }
+        } else {
+            returnFoodToTouchesBegan(draggedFood)
+        }
         
         self.draggedFood = nil
+        updateHighlights()
     }
     
     private func setupScoreLabel() {

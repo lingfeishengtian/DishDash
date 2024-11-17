@@ -10,7 +10,7 @@ import SpriteKit
 
 extension GameScene : TutorialSceneControl {
     var foodCategory: FoodOrderCategory {
-        .All
+        .Sushi
     }
     
     func startTutorialPhase() {
@@ -60,6 +60,44 @@ extension GameScene : TutorialSceneControl {
             
             if food.foodIdentifier == foodItem {
                 food.addGlow()
+            }
+        }
+    }
+    
+    func highlightForTutorialPhase(nextAction: TutorialAction) {
+        clearHighlights()
+        switch nextAction {
+        case .combine(let food1, let food2):
+            if draggedFood?.foodIdentifier == food1 {
+                highlightFood(foodItem: food2)
+            } else {
+                highlightFood(foodItem: food1)
+            }
+        case .action(let food, let tileType):
+            if draggedFood?.foodIdentifier == food {
+                highlightTile(tileType: tileType)
+            } else {
+                highlightFood(foodItem: food)
+            }
+        case .cook(let food):
+            highlightFood(foodItem: food)
+        case .serve(let food):
+            if draggedFood?.foodIdentifier == food {
+                highlightCustomers(ordering: food)
+            } else {
+                highlightFood(foodItem: food)
+            }
+        case .grabSourceToTile(let food, let tileType):
+            if draggedFood?.foodIdentifier == food {
+                highlightTile(tileType: tileType)
+            } else {
+                highlightFoodSource(foodItem: food)
+            }
+        case .grabSourceToFoodItem(let food1, let food2):
+            if draggedFood?.foodIdentifier == food1 {
+                highlightFood(foodItem: food2)
+            } else {
+                highlightFoodSource(foodItem: food1)
             }
         }
     }

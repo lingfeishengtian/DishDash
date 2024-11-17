@@ -56,6 +56,8 @@ extension GameScene {
         //food.createPortionLabel()
         food.updatePortionLabel()
         onAction(tutorialAction: .action(food.foodIdentifier, tileGroup(at: tilePosition)))
+        onAction(tutorialAction: .grabSourceToTile(food.foodIdentifier, tileGroup(at: tilePosition)))
+        
         return [food]
     }
     
@@ -73,6 +75,7 @@ extension GameScene {
         
         /// Notify tutorial module
         onAction(tutorialAction: .combine(incomingFood.foodIdentifier, existingFood.foodIdentifier))
+        onAction(tutorialAction: .grabSourceToFoodItem(incomingFood.foodIdentifier, existingFood.foodIdentifier))
         
         if let incomingPortionCount = incomingFood.portion, incomingPortionCount > 0 {
             existingFood.updateFoodItem(foodItem: resultingItem)

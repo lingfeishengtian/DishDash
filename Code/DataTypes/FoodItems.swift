@@ -57,16 +57,16 @@ enum FoodOrderCategory: Int, CaseIterable {
             ]
         case .Sushi:
             return [
-                .grabSource(.WholeFish, .counter),
-                .combine(.WholeFish, .Knife),
+                .grabSourceToTile(.WholeFish, .counter),
+                .grabSourceToFoodItem(.Knife, .WholeFish),
                 .serve(.SlicedFish),
-                .action(.WholeFish, .counter),
-                .combine(.WholeFish, .Knife),
-                .action(.Pot, .sink),
-                .combine(.PotWater, .Rice),
+                .grabSourceToTile(.WholeFish, .counter),
+                .grabSourceToFoodItem(.Knife, .WholeFish),
+                .grabSourceToTile(.Pot, .sink),
+                .grabSourceToFoodItem(.Rice, .PotWater),
                 .action(.PotRawRiceWater, .machine),
                 .cook(.PotRawRiceWater),
-                .combine(.SlicedFish, .PotCookedRice),
+                .combine(.PotCookedRice, .SlicedFish),
                 .serve(.Nigiri)
             ]
         case .All:
