@@ -10,9 +10,11 @@
 //
 import Foundation
 
-enum FoodOrderCategory: Int {
+enum FoodOrderCategory: Int, CaseIterable {
     case Steak = 0
     case Sushi = 1
+    
+    case All = 10
     
     var foodSources: [FoodItem] {
         switch self {
@@ -20,6 +22,8 @@ enum FoodOrderCategory: Int {
             return [.SteakRaw]
         case .Sushi:
             return [.WholeFish, .Rice, .Pot, .Knife]
+        case .All:
+            return FoodOrderCategory.allCases.flatMap { $0 == .All ? [] : $0.foodSources }
         }
     }
     
@@ -29,6 +33,8 @@ enum FoodOrderCategory: Int {
             return [.SteakRare, .SteakMedium, .SteakBurnt]
         case .Sushi:
             return [.SlicedFish, .Nigiri]
+        case .All:
+            return FoodOrderCategory.allCases.flatMap { $0 == .All ? [] : $0.orderableItems }
         }
     }
     
@@ -51,7 +57,7 @@ enum FoodOrderCategory: Int {
             ]
         case .Sushi:
             return [
-                .action(.WholeFish, .counter),
+                .grabSource(.WholeFish, .counter),
                 .combine(.WholeFish, .Knife),
                 .serve(.SlicedFish),
                 .action(.WholeFish, .counter),
@@ -63,6 +69,8 @@ enum FoodOrderCategory: Int {
                 .combine(.SlicedFish, .PotCookedRice),
                 .serve(.Nigiri)
             ]
+        case .All:
+            return FoodOrderCategory.allCases.flatMap { $0 == .All ? [] : $0.tutorialSequence }
         }
     }
     

@@ -65,6 +65,29 @@ class GameScene: SKScene {
         setupScoreLabel()
         startNewCustomerTimer()
         generateFoodSourcesToolbar()
+        setupRecipeToolbar()
+        
+        let sinkPositions = getPositionsOfTileGroup(for: .sink)
+        sinkPositions.forEach { position in
+            let label = SKLabelNode(text: "Sink")
+            label.position = convertTilePointToGameSceneCoords(position)
+            label.position.y -= 20
+            label.zPosition = 8
+            label.fontSize = 20
+            label.fontColor = .black
+            addChild(label)
+        }
+        
+        let counterPositions = getPositionsOfTileGroup(for: .counter)
+        counterPositions.forEach { position in
+            let label = SKLabelNode(text: "Counter")
+            label.position = convertTilePointToGameSceneCoords(position)
+            label.position.y -= 20
+            label.zPosition = 8
+            label.fontSize = 10
+            label.fontColor = .black
+            addChild(label)
+        }
     }
     
     override func didMove(to view: SKView) {

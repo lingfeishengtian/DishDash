@@ -10,7 +10,7 @@ import SpriteKit
 
 extension GameScene : TutorialSceneControl {
     var foodCategory: FoodOrderCategory {
-        .Sushi
+        .All
     }
     
     func startTutorialPhase() {
@@ -62,7 +62,9 @@ extension GameScene : TutorialSceneControl {
                 food.addGlow()
             }
         }
-        
+    }
+    
+    func highlightFoodSource(foodItem: FoodItem) {
         for foodSourceSprite in foodSourceToolbar.children {
             if let spriteNode = foodSourceSprite as? SKSpriteNode, foodSourceSprite.name == "FoodSource\(foodItem.rawValue)" {
                 spriteNode.addGlow()

@@ -9,6 +9,7 @@ import Foundation
 
 enum TutorialAction: Equatable {
     case combine(FoodItem, FoodItem)
+    case grabSource(FoodItem, TileType)
     case action(FoodItem, TileType)
     case cook(FoodItem)
     case serve(FoodItem)
@@ -23,6 +24,8 @@ enum TutorialAction: Equatable {
             return food1 == food2
         case (.serve(let food1), .serve(let food2)):
             return food1 == food2
+        case (.grabSource(let food1, let tile1), .grabSource(let food2, let tile2)):
+            return food1 == food2 && tile1 == tile2
         default:
             return false
         }
@@ -38,6 +41,7 @@ protocol TutorialSceneControl: AnyObject {
     func endTutorialPhase() -> Void
     
     func highlightFood(foodItem: FoodItem) -> Void
+    func highlightFoodSource(foodItem: FoodItem) -> Void
     func highlightTile(tileType: TileType) -> Void
     func highlightCustomers(ordering foodItem: FoodItem) -> Void
     func clearHighlights() -> Void
@@ -71,6 +75,9 @@ extension TutorialSceneControl {
         case .serve(let food):
             highlightFood(foodItem: food)
             highlightCustomers(ordering: food)
+        case .grabSource(let food, let tileType):
+            highlightFood(foodItem: food)
+            highlightTile(tileType: tileType)
         }
     }
     
