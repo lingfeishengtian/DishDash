@@ -94,17 +94,17 @@ class Food: DDEntity {
         updatePortionLabel()
     }
     func createPortionLabel() {
-        portionLabel = SKLabelNode(fontNamed: "Arial")
+        portionLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
         portionLabel?.fontSize = 14
         portionLabel?.fontColor = .white
-        portionLabel?.position = CGPoint(x: 0, y: -self.size.height / 2 - 20)
+        portionLabel?.position = CGPoint(x: 0, y: self.size.height / 2 + 5)
         portionLabel?.zPosition = 1
         addChild(portionLabel!)
     }
     
     func updatePortionLabel() {
         if let portionCount = portion {
-            portionLabel?.text = "Portions: \(portionCount)"
+            portionLabel?.text = "\(portionCount)"
             portionLabel?.isHidden = false
         } else {
             portionLabel?.isHidden = true
