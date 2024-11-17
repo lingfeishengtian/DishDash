@@ -38,6 +38,7 @@ extension GameScene {
         customerGeneratorTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timeIntervalBasedOnDifficulty()), repeats: false) { [weak self] _ in
             self?.addCustomer()
         }
+        clearHighlights()
     }
     
     func addCustomer(_ customer: Customer) -> Bool {
@@ -46,6 +47,15 @@ extension GameScene {
             self.addChild(customer)
             
             customersAtTables.append(customer)
+            
+            /// Fire table events for food on table tiles
+            for food in getAllFoodOnscreen() {
+                let tilePosition = position(of: food)
+                if tileGroup(at: tilePosition) == .table {
+                    eventTableTile(food, at: tilePosition)
+                }
+            }
+            
             return true
         }
         
@@ -60,7 +70,6 @@ extension GameScene {
         
         if addCustomer(newCustomer) {
             customersSinceStart += 1
-            
             startNewCustomerTimer()
         } else {
             // TODO: Implement outside queueing

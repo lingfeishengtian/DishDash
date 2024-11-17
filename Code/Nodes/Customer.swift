@@ -7,7 +7,7 @@
 import SpriteKit
 import os
 
-class Customer: SKSpriteNode{
+class Customer: DDEntity {
     var order: FoodItem
     private var seconds: Int
     private var waitingTimer: Timer?
@@ -33,20 +33,6 @@ class Customer: SKSpriteNode{
         startCountdown()
     }
     
-    private var timerGuage: SKSpriteNode?
-    func createTimerGuage(time: Int) {
-        timerGuage = SKSpriteNode(color: .red, size: CGSize(width: self.size.width, height: 5))
-        timerGuage?.position = CGPoint(x: 0, y: -self.size.height / 2 - 5)
-        addChild(timerGuage!)
-        
-        let timerGuageWidth = self.size.width
-        self.timerGuage?.run(SKAction.resize(byWidth: -timerGuageWidth, height: 0, duration: Double(time)))
-    }
-    
-    func removeTimerGuage() {
-        timerGuage?.removeFromParent()
-    }
-    
     func orderSatisfied() {
         served()
         // TODO: Change status to eating and set timer
@@ -58,36 +44,7 @@ class Customer: SKSpriteNode{
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented") }
-    
-    private func setupOrderLabel(size: CGSize) {
-//        orderLabel = SKLabelNode(text: order.description)
-//        orderLabel.fontSize = 20
-//        orderLabel.fontColor = .white
-//        orderLabel.alpha = 1.0
-//        orderLabel.position = CGPoint(x: 0, y: size.height / 2 + 5)
-//        addChild(orderLabel)
-        
-        let textBox = SKShapeNode(rectOf: CGSize(width: size.width, height: size.height))
-        textBox.fillColor = .white
-        textBox.strokeColor = .black
-        textBox.position = CGPoint(x: 0, y: size.height / 2 + 5)
-        
-        let orderImage = SKSpriteNode(imageNamed: order.assetName)
-        orderImage.size = CGSize(width: size.width / 2, height: size.height / 2)
-        orderImage.position = CGPoint(x: 0, y: 0)
-        orderImage.scale(to: CGSize(width: size.width, height: size.height))
-        
-        addChild(textBox)
-        textBox.addChild(orderImage)
-        
-        // animate bouncing up down
-        let moveUp = SKAction.moveBy(x: 0, y: 5, duration: 0.5)
-        moveUp.timingMode = .easeInEaseOut
-        let moveDown = SKAction.moveBy(x: 0, y: -5, duration: 0.5)
-        moveDown.timingMode = .easeInEaseOut
-        let moveSequence = SKAction.sequence([moveUp, moveDown])
-        textBox.run(SKAction.repeatForever(moveSequence))
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func startCountdown() {
@@ -123,4 +80,30 @@ class Customer: SKSpriteNode{
         waitingTimer?.invalidate()
     }
     
+}
+
+// MARK - UI Element creation helper
+extension Customer {
+    private func setupOrderLabel(size: CGSize) {
+        let textBox = SKShapeNode(rectOf: CGSize(width: size.width, height: size.height))
+        textBox.fillColor = .white
+        textBox.strokeColor = .black
+        textBox.position = CGPoint(x: 0, y: size.height / 2 + 5)
+        
+        let orderImage = SKSpriteNode(imageNamed: order.assetName)
+        orderImage.size = CGSize(width: size.width / 2, height: size.height / 2)
+        orderImage.position = CGPoint(x: 0, y: 0)
+        orderImage.scale(to: CGSize(width: size.width, height: size.height))
+        
+        addChild(textBox)
+        textBox.addChild(orderImage)
+        
+        // animate bouncing up down
+        let moveUp = SKAction.moveBy(x: 0, y: 5, duration: 0.5)
+        moveUp.timingMode = .easeInEaseOut
+        let moveDown = SKAction.moveBy(x: 0, y: -5, duration: 0.5)
+        moveDown.timingMode = .easeInEaseOut
+        let moveSequence = SKAction.sequence([moveUp, moveDown])
+        textBox.run(SKAction.repeatForever(moveSequence))
+    }
 }

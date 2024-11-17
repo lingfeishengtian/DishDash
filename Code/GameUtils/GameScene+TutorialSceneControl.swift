@@ -23,17 +23,28 @@ extension GameScene : TutorialSceneControl {
         // TODO: resume all timers
         startNewCustomerTimer()
         removeAllFoodItemsFromScene()
+        clearHighlights()
         
         // Show brief Congrats message
-        let message = SKLabelNode(text: "Tutorial Complete!")
-        message.fontSize = 50
-        message.position = CGPoint(x: 0, y: 0)
-        message.zPosition = 10
-        addChild(message)
+        let messageLine1 = generateDefaultGameSceneLabel(
+            text: "Tutorial",
+            fontSize: 50
+        )
+        let messageLine2 = generateDefaultGameSceneLabel(
+            text: "Complete!",
+            fontSize: 50,
+            position: CGPoint(x: 0, y: -50)
+        )
+        messageLine1.zPosition = 10
+        messageLine2.zPosition = 10
+        
+        addChild(messageLine1)
+        addChild(messageLine2)
         
         let fadeOut = SKAction.fadeOut(withDuration: 3)
         let remove = SKAction.removeFromParent()
-        message.run(.sequence([fadeOut, remove]))
+        messageLine1.run(.sequence([fadeOut, remove]))
+        messageLine2.run(.sequence([fadeOut, remove]))
     }
     
     func highlightFood(foodItem: FoodItem) {

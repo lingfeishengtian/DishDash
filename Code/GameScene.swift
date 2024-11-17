@@ -72,10 +72,13 @@ class GameScene: SKScene {
     var touchesBeganLocation: TilePoint? = nil
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        var location = touch.location(in: self)
+        let location = touch.location(in: self)
         //let node = atPoint(location)
         touchesBeganLocation = nil
         
+        if atPoint(location).name == "RestartButton" {
+            restartGame()
+        }
         
         if let nameSource = atPoint(location).name, nameSource.hasPrefix("FoodSource"), let foodRawValue = Int(nameSource.dropFirst("FoodSource".count)), let foodItem = FoodItem(rawValue: foodRawValue) {
             draggedFood = Food(name: foodItem, size: CGSize(width: 50, height: 50))
@@ -84,84 +87,30 @@ class GameScene: SKScene {
                 addChild(draggedFood)
             }
         }else {
-            let tileMaplocation = touch.location(in: tileMap)
-            let column = tileMap.tileColumnIndex(fromPosition: tileMaplocation)
-            let row = tileMap.tileRowIndex(fromPosition: tileMaplocation)
-            let tilePosition = TilePoint(column: column, row: row)
-            if let food = getFoodOnTile(tilePosition) {
+            if let tilePosition = tilePosition(for: touch), let food = getFoodOnTile(tilePosition) {
                 draggedFood = food
                 
-                if let (action, slicedFood) = Recipe.action(for: food.foodIdentifier), action == .Cut {
-                    cuttingInProgress = true
-                    cuttingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
-                        food.updateFoodItem(foodItem: slicedFood)
-                        return
-                    
-                    }
-                    food.createTimerGuage(time: 3)
-                } else {
-                    food.position = location
-                }
-                
                 food.stopCooking()
-                touchesBeganLocation = TilePoint(x: column, y: row) }
-            
-        }
-    
-        
-        if atPoint(location).name == "RestartButton" {
-            restartGame()
+                touchesBeganLocation = tilePosition
+            }
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood else { return }
         let location = touch.location(in: self)
-        if cuttingInProgress || portionInProgress{
-            // calculate distance from original location
-            let distance = sqrt(pow(location.x - draggedFood.position.x, 2) + pow(location.y - draggedFood.position.y, 2))
-            if distance > 50 {
-                cuttingTimer?.invalidate()
-                cuttingInProgress = false
-                portionTimer?.invalidate()
-                portionInProgress = false
-                draggedFood.removeTimerGuage()
-            } else {
-                return
-            }
-        }
         draggedFood.position = location
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first, let draggedFood = draggedFood else { return }
-        let positionInTileMap = touch.location(in: tileMap)
-        let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
-        let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
-        let tilePosition = TilePoint(column: column, row: row)
+        guard let touch = touches.first, let draggedFood = draggedFood, let tilePosition = tilePosition(for: touch) else { return }
         
         cuttingTimer?.invalidate()
         portionTimer?.invalidate()
         draggedFood.removeTimerGuage()
         
-        if let tileGroup = tileMap.tileGroup(atColumn: column, row: row), setFoodItemDown(draggedFood, at: tilePosition) {
-            switch tileGroup.name {
-            case TileType.machine.rawValue:
-                placeFoodOnMachineTile(draggedFood, at: tilePosition)
-            case TileType.counter.rawValue:
-                placeFoodOnNonMachineTile(draggedFood, at: tilePosition)
-            case TileType.sink.rawValue:
-                eventItemPlacedOnSink(draggedFood, at: tilePosition)
-            case TileType.table.rawValue:
-                eventItemPlacedOnTable(draggedFood, at: tilePosition)
-            case TileType.trashcan.rawValue:
-                placeFoodOnTrashTile(draggedFood, at: tilePosition)
-            default:
-                returnFoodToTouchesBegan(draggedFood)
-            }
-        } else {
-            returnFoodToTouchesBegan(draggedFood)
-        }
+        let itemsToFireEvents = setFoodItemDown(draggedFood, at: tilePosition)
+        itemsToFireEvents.forEach { fireTileEvent($0) }
         
         self.draggedFood = nil
     }

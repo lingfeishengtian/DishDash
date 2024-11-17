@@ -6,8 +6,24 @@
 //
 
 import Foundation
+import UIKit
 
 extension GameScene {
+    func tilePosition(for touch: UITouch) -> TilePoint? {
+        let positionInTileMap = touch.location(in: tileMap)
+        let column = tileMap.tileColumnIndex(fromPosition: positionInTileMap)
+        let row = tileMap.tileRowIndex(fromPosition: positionInTileMap)
+        return TilePoint(column: column, row: row)
+    }
+    
+    func position(of food: Food) -> TilePoint {
+        let foodPosition = food.position
+        let tileMapPosition = convert(foodPosition, to: tileMap)
+        let column = tileMap.tileColumnIndex(fromPosition: tileMapPosition)
+        let row = tileMap.tileRowIndex(fromPosition: tileMapPosition)
+        return TilePoint(column: column, row: row)
+    }
+    
     /// Get all available positions of a tile group
     func getPositionsOfTileGroup(for tileType: TileType) -> [TilePoint] {
         var tablePositions: [TilePoint] = []
@@ -68,5 +84,9 @@ extension GameScene {
         
         food.stopCooking()
         addChild(food)
+    }
+    
+    func getAllFoodOnscreen() -> [Food] {
+        return children.compactMap { $0 as? Food }
     }
 }

@@ -77,6 +77,8 @@ extension TutorialSceneControl {
     func updateHighlights() {
         if let nextAction = currentTutorialPhase {
             highlightForTutorialPhase(nextAction: nextAction)
+        } else {
+            clearHighlights()
         }
     }
     

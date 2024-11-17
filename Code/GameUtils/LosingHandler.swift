@@ -16,16 +16,22 @@ extension GameScene {
         background.zPosition = 10
         
         // Game Over
-        let gameOverLabel = SKLabelNode(text: "Game Over")
-        gameOverLabel.fontSize = 40
-        gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
-        gameOverLabel.zPosition = 11
+        let gameOverLabel = generateDefaultGameSceneLabel(
+            text: "Game Over",
+            fontSize: 40,
+            position: CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
+        )
+        gameOverLabel.name = "gameOverLabel"
         
         // Restart button
-        let restartButton = SKLabelNode(text: "Restart")
-        restartButton.fontSize = 30
+        let restartButton = generateDefaultGameSceneLabel(
+            text: "Restart",
+            fontSize: 30,
+            position: CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        )
         restartButton.name = "RestartButton"
-        restartButton.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        
+        gameOverLabel.zPosition = 11
         restartButton.zPosition = 11
         
         background.addChild(gameOverLabel)
@@ -34,6 +40,10 @@ extension GameScene {
     }
     
     func restartGame() {
+        score = 0
+        scoreLabel.text = "Score: \(score)"
+        customersSinceStart = 0
+        
         background.removeFromParent()
         startNewCustomerTimer()
     }
