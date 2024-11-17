@@ -8,13 +8,13 @@
 import Foundation
 
 /// Base Customer Rate defines the beginning time for another customer spawning
-fileprivate let baseCustomerSpawnRate: Int = 1
+fileprivate let baseCustomerSpawnRate: Int = 10
 /// Number of customers before spawnRate is reduced by 1
 fileprivate let numCustomersBeforeDifficultySpike: Int = 2
 fileprivate let minimumSpawnRate: Int = 2
 
 /// Same concept as baseCustomerSpawnRate but for how long the customer will wait before losing the game
-fileprivate let baseCustomerTimeLimit: Int = 1
+fileprivate let baseCustomerTimeLimit: Int = 20
 fileprivate let numCustomersBeforeTimeLimitSpike: Int = 2
 
 extension GameScene {
