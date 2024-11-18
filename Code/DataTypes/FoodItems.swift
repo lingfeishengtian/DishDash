@@ -252,11 +252,11 @@ enum StoveOperation: Int {
     var timeNeeded: Int {
         switch self {
         case .CookShort:
-            return 3
+            return 2
         case .CookMedium:
-            return 5
+            return 4
         case .CookLong:
-            return 7
+            return 6
         case .SlowCook:
             return 10
         }

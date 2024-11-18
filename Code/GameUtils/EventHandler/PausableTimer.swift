@@ -33,6 +33,7 @@ class PausableTimer {
             
             if self.currentTime <= 0 {
                 self.onCompletion()
+                self.timer?.invalidate()
             }
         }
     }

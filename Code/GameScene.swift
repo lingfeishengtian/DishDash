@@ -185,12 +185,19 @@ class GameScene: SKScene {
     }
     
     func incrementScore(by points: Int) {
+        if inTutorialPhase {
+            return
+        }
+        
         score += points
         let pointsThresholdForNextLevel =  5 + (currentLevel - 1) * 10
         if score >= pointsThresholdForNextLevel {
             currentLevel += 1
-            startTutorialPhase()
-            initiateTutorial()
+            if currentLevel <= 2 {
+                startTutorialPhase()
+                initiateTutorial()
+            }
+            
             levelLabel.text = "Level: \(currentLevel)"
             
             let congratsLevelUpLabel = generateDefaultGameSceneLabel(text: "Level Up!", fontSize: 36)
@@ -198,20 +205,7 @@ class GameScene: SKScene {
             let fadeOut = SKAction.fadeOut(withDuration: 2.0)
             let remove = SKAction.removeFromParent()
             congratsLevelUpLabel.run(SKAction.sequence([fadeOut, remove]))
-            
-//            let levelUpLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-//            levelUpLabel.text = "Level \(currentLevel)"
-//            levelUpLabel.fontSize = 36
-//            levelUpLabel.fontColor = .black
-//            levelUpLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
-//            levelUpLabel.zPosition = 1000
-//            
-//            addChild(levelUpLabel)
-//            
-//            let fadeOut = SKAction.fadeOut(withDuration: 2.0)
-//            let remove = SKAction.removeFromParent()
-//            levelUpLabel.run(SKAction.sequence([fadeOut, remove]))
-            
+    
             generateFoodSourcesToolbar()
         }
     }

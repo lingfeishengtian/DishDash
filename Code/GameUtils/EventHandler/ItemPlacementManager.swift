@@ -109,7 +109,7 @@ extension GameScene {
                     customer.orderSatisfied()
                     removeCustomer(customer)
                     food.removeFromParent()
-                    incrementScore(by: 1)
+                    incrementScore(by: customer.score)
                     return
                 }
             }

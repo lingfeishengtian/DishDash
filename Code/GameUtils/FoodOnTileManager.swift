@@ -16,6 +16,14 @@ extension GameScene {
         return TilePoint(column: column, row: row)
     }
     
+    /// In terms of scene coordinates
+    func tilePosition(for position: CGPoint) -> TilePoint? {
+        let convertedPosition = convert(position, to: tileMap)
+        let column = tileMap.tileColumnIndex(fromPosition: convertedPosition)
+        let row = tileMap.tileRowIndex(fromPosition: convertedPosition)
+        return TilePoint(column: column, row: row)
+    }
+    
     func position(of food: Food) -> TilePoint {
         let foodPosition = food.position
         let tileMapPosition = convert(foodPosition, to: tileMap)

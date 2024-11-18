@@ -7,6 +7,12 @@
 import SpriteKit
 import os
 
+enum FacialExpressions : String {
+    case happy = "HappyFacialExpression"
+    case neutral = "NeutralFacialExpression"
+    case angry = "SadFacialExpression"
+}
+
 class Customer: DDEntity {
     var order: FoodItem
     private var seconds: Int
@@ -20,12 +26,9 @@ class Customer: DDEntity {
         self.order = order
         self.seconds = timeLimit
         self.onPatienceRunOut = onPatienceRunOut
+        self.currentCustomerHappiness = .happy
         
-        let circle = SKShapeNode(circleOfRadius: size.width / 2)
-        circle.fillColor = .orange
-        let texture = SKView().texture(from: circle)!
-        
-        super.init(texture: texture, color: .clear, size: size)
+        super.init(texture: SKTexture(imageNamed: FacialExpressions.happy.rawValue), color: .clear, size: size)
         self.name = "Customer"
         
         setupOrderLabel(size: size)
@@ -39,7 +42,49 @@ class Customer: DDEntity {
         if let parent = self.parent as? GameScene {
             parent.onAction(tutorialAction: .serve(order))
         }
+        
+        // Show amount of points earned
+        let pointsLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        pointsLabel.text = "+\(score)"
+        pointsLabel.fontColor = .green
+        pointsLabel.fontSize = 20
+        pointsLabel.position = self.position
+        pointsLabel.zPosition = 10
+        
+        self.parent?.addChild(pointsLabel)
         self.removeFromParent()
+        
+        let moveUp = SKAction.moveBy(x: 0, y: 10, duration: 0.5)
+        moveUp.timingMode = .easeInEaseOut
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let group = SKAction.group([moveUp, fadeOut])
+        pointsLabel.run(group) {
+            pointsLabel.removeFromParent()
+        }
+        
+        // TODO: Find why this portion is needed
+        if let parent = self.parent as? GameScene, let customerPosition = parent.tilePosition(for: self.position) {
+            if let foodServed = parent.getFoodOnTile(TilePoint(column: customerPosition.column + 1, row: customerPosition.row)) {
+                foodServed.removeFromParent()
+            }
+        }
+    }
+    
+    var score: Int {
+        switch currentCustomerHappiness {
+        case .happy:
+            return 3
+        case .neutral:
+            return 2
+        case .angry:
+            return 1
+        }
+    }
+    
+    var currentCustomerHappiness: FacialExpressions {
+        didSet {
+            self.texture = SKTexture(imageNamed: currentCustomerHappiness.rawValue)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -51,22 +96,19 @@ class Customer: DDEntity {
             return
         }
         
-//        waitingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-//            guard let self = self else { return }
-//            self.seconds -= 1
-//            
-//            if self.seconds <= 0 {
-//                onPatienceRunOut()
-//                timer.invalidate()
-//            } else {
-//                logger.info("\(self.seconds) seconds left for customer")
-//            }
-//        }
-//        internalTimer?.start()
-//        createTimerGuage(time: seconds)
-        
         startTimer(withSeconds: seconds) {
             self.onPatienceRunOut()
+        } onTick: { tickTime in
+            switch tickTime / Double(self.seconds) {
+            case 0.66..<1.0:
+                self.currentCustomerHappiness = .happy
+            case 0.33..<0.66:
+                self.currentCustomerHappiness = .neutral
+            case 0..<0.33:
+                self.currentCustomerHappiness = .angry
+            default:
+                self.currentCustomerHappiness = .angry
+            }
         }
     }
     
@@ -81,7 +123,7 @@ extension Customer {
         let textBox = SKShapeNode(rectOf: CGSize(width: size.width, height: size.height))
         textBox.fillColor = .white
         textBox.strokeColor = .black
-        textBox.position = CGPoint(x: 0, y: size.height / 2 + 5)
+        textBox.position = CGPoint(x: 0, y: size.height / 2 + 10)
         
         let orderImage = SKSpriteNode(imageNamed: order.assetName)
         orderImage.size = CGSize(width: size.width / 2, height: size.height / 2)

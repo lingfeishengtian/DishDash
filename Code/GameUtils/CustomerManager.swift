@@ -15,7 +15,7 @@ fileprivate let minimumSpawnRate: Int = 2
 
 /// Same concept as baseCustomerSpawnRate but for how long the customer will wait before losing the game
 fileprivate let baseCustomerTimeLimit: Int = 20
-fileprivate let numCustomersBeforeTimeLimitSpike: Int = 2
+fileprivate let numCustomersBeforeTimeLimitSpike: Int = 3
 
 extension GameScene {
     func stopAllCustomerTimers() {
@@ -60,11 +60,6 @@ extension GameScene {
                     eventTableTile(food, at: tilePosition)
                 }
             }
-            
-//            if customer.parent != nil && showTutorialIndicator && tutorialActionSequence.isEmpty && !inTutorialPhase {
-//                tutorialActionSequence = customer.order.tutorialSequence
-//                initiateTutorial()
-//            }
             
             return true
         }

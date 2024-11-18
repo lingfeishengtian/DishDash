@@ -16,19 +16,17 @@ class DDEntity: SKSpriteNode {
         timerGuage = SKSpriteNode(color: .red, size: CGSize(width: self.size.width, height: 5))
         timerGuage?.position = CGPoint(x: 0, y: -self.size.height / 2 - 5)
         addChild(timerGuage!)
-        
-//        let timerGuageWidth = self.size.width
-//        self.timerGuage?.run(SKAction.resize(byWidth: -timerGuageWidth, height: 0, duration: Double(time)))
     }
     
     private func removeTimerGuage() {
         timerGuage?.removeFromParent()
     }
     
-    func startTimer(withSeconds seconds: Int, completion: @escaping () -> Void) {
+    func startTimer(withSeconds seconds: Int, completion: @escaping () -> Void, onTick: @escaping (Double) -> Void = { _ in }) {
         timerGuage?.removeFromParent()
         createTimerGuage(time: seconds)
         internalTimer = PausableTimer(time: seconds) { tick in
+            onTick(tick)
             self.timerGuage?.run(SKAction.resize(toWidth: self.size.width * CGFloat(tick) / CGFloat(seconds), duration: 0.1))
         } onCompletion: {
             completion()
