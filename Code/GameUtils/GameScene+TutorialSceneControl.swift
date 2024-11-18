@@ -14,16 +14,21 @@ extension GameScene : TutorialSceneControl {
     }
     
     func startTutorialPhase() {
-        // TODO: pause all timers
+        inTutorialPhase = true
         stopAllCustomerTimers()
         removeAllFoodItemsFromScene()
     }
     
+    var showTutorialIndicator: Bool {
+        true
+    }
+    
     func endTutorialPhase() {
-        // TODO: resume all timers
+        inTutorialPhase = false
         startNewCustomerTimer()
         removeAllFoodItemsFromScene()
         clearHighlights()
+        updateCurrentRecipeInstructions()
         
         // Show brief Congrats message
         let messageLine1 = generateDefaultGameSceneLabel(
@@ -82,11 +87,8 @@ extension GameScene : TutorialSceneControl {
         case .cook(let food):
             highlightFood(foodItem: food)
         case .serve(let food):
-            if draggedFood?.foodIdentifier == food {
-                highlightCustomers(ordering: food)
-            } else {
-                highlightFood(foodItem: food)
-            }
+            highlightCustomers(ordering: food)
+            highlightFood(foodItem: food)
         case .grabSourceToTile(let food, let tileType):
             if draggedFood?.foodIdentifier == food {
                 highlightTile(tileType: tileType)
@@ -100,6 +102,8 @@ extension GameScene : TutorialSceneControl {
                 highlightFoodSource(foodItem: food1)
             }
         }
+        
+        updateCurrentRecipeInstructions()
     }
     
     func highlightFoodSource(foodItem: FoodItem) {

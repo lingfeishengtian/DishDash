@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 enum TileType: String, CaseIterable {
     case counter = "Counter"
@@ -43,5 +44,9 @@ enum TileType: String, CaseIterable {
         case .floor, .unknown:
             return false
         }
+    }
+    
+    var assetName : String {
+        return self.rawValue
     }
 }
