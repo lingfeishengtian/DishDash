@@ -78,7 +78,7 @@ extension GameScene {
             startNewCustomerTimer()
         } else {
             // TODO: Implement outside queueing
-            loseGame()
+//            loseGame()
         }
     }
     

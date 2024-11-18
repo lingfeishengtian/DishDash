@@ -42,9 +42,11 @@ extension GameScene {
     func restartGame() {
         score = 0
         scoreLabel.text = "Score: \(score)"
-        levelLabel.text = "Level: 1"
         currentLevel = 1
+        
+        changeTileMap(to: currentLevel)
         customersSinceStart = 0
+        generateFoodSourcesToolbar()
         
         background.removeFromParent()
         startNewCustomerTimer()
@@ -58,6 +60,13 @@ extension GameScene {
         draggedFood = nil
         
         stopAllCustomerTimers()
+        
+        for child in children {
+            if let ddEntity = child as? DDEntity {
+                ddEntity.stopTimer()
+                ddEntity.removeFromParent()
+            }
+        }
         
         cuttingTimer?.invalidate()
         cuttingTimer = nil

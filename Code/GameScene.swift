@@ -64,7 +64,7 @@ class GameScene: SKScene {
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
-        tileMap = self.childNode(withName: "Tile Map Node") as? SKTileMapNode
+        tileMap = self.childNode(withName: "Tile Map NodeLevel 1") as? SKTileMapNode
         foodSourceToolbar = self.childNode(withName: "FoodSourceToolbar")
         setupScoreLabel()
         startNewCustomerTimer()
@@ -198,6 +198,8 @@ class GameScene: SKScene {
                 initiateTutorial()
             }
             
+            changeTileMap(to: currentLevel)
+            
             levelLabel.text = "Level: \(currentLevel)"
             
             let congratsLevelUpLabel = generateDefaultGameSceneLabel(text: "Level Up!", fontSize: 36)
@@ -207,6 +209,14 @@ class GameScene: SKScene {
             congratsLevelUpLabel.run(SKAction.sequence([fadeOut, remove]))
     
             generateFoodSourcesToolbar()
+        }
+    }
+    
+    func changeTileMap(to level: Int) {
+        if let newTileMap = self.children.first(where: { $0.name?.contains("Level \(level)") ?? false }) {
+            tileMap.position = newTileMap.position
+            newTileMap.position = CGPoint(x: 0, y: 0)
+            tileMap = newTileMap as? SKTileMapNode
         }
     }
 }
