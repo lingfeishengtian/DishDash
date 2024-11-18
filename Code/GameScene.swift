@@ -199,6 +199,8 @@ class GameScene: SKScene {
                 let fadeOut = SKAction.fadeOut(withDuration: 2.0)
                 let remove = SKAction.removeFromParent()
                 levelUpLabel.run(SKAction.sequence([fadeOut, remove]))
+                
+                generateFoodSourcesToolbar()
             }
         }
 }
