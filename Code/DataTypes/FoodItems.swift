@@ -42,14 +42,14 @@ enum FoodOrderCategory: Int, CaseIterable {
         switch self {
         case .Steak:
             return [
-                .action(.SteakRaw, .machine),
+                .grabSourceToTile(.SteakRaw, .machine),
                 .cook(.SteakRaw),
                 .serve(.SteakRare),
-                .action(.SteakRaw, .machine),
+                .grabSourceToTile(.SteakRaw, .machine),
                 .cook(.SteakRaw),
                 .cook(.SteakRare),
                 .serve(.SteakMedium),
-                .action(.SteakRaw, .machine),
+                .grabSourceToTile(.SteakRaw, .machine),
                 .cook(.SteakRaw),
                 .cook(.SteakRare),
                 .cook(.SteakMedium),
@@ -70,7 +70,7 @@ enum FoodOrderCategory: Int, CaseIterable {
                 .serve(.Nigiri)
             ]
         case .All:
-            return FoodOrderCategory.allCases.flatMap { $0 == .All ? [] : $0.tutorialSequence }
+            return []
         }
     }
     

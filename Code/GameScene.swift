@@ -104,6 +104,10 @@ class GameScene: SKScene {
                 self.pauseGame()
             }
             self.view?.window?.rootViewController?.present(dismissingViewController, animated: true)
+        } else if atPoint(location).name == "SkipButton" {
+            currentTutorialPhase = nil
+            tutorialActionSequence.removeAll()
+            endTutorialPhase()
         }
         
         if let nameSource = atPoint(location).name, nameSource.hasPrefix("FoodSource"), let foodRawValue = Int(nameSource.dropFirst("FoodSource".count)), let foodItem = FoodItem(rawValue: foodRawValue) {
@@ -129,7 +133,7 @@ class GameScene: SKScene {
         let location = touch.location(in: self)
         draggedFood.position = location
     }
-
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first, let draggedFood = draggedFood, let tilePosition = tilePosition(for: touch) else { return }
         
@@ -183,24 +187,32 @@ class GameScene: SKScene {
     func incrementScore(by points: Int) {
         score += points
         let pointsThresholdForNextLevel =  5 + (currentLevel - 1) * 10
-            if score >= pointsThresholdForNextLevel {
-                currentLevel += 1
-                levelLabel.text = "Level: \(currentLevel)"
-
-                let levelUpLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
-                levelUpLabel.text = "Level \(currentLevel)"
-                levelUpLabel.fontSize = 36
-                levelUpLabel.fontColor = .black
-                levelUpLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
-                levelUpLabel.zPosition = 1000
-
-                addChild(levelUpLabel)
-
-                let fadeOut = SKAction.fadeOut(withDuration: 2.0)
-                let remove = SKAction.removeFromParent()
-                levelUpLabel.run(SKAction.sequence([fadeOut, remove]))
-                
-                generateFoodSourcesToolbar()
-            }
+        if score >= pointsThresholdForNextLevel {
+            currentLevel += 1
+            startTutorialPhase()
+            initiateTutorial()
+            levelLabel.text = "Level: \(currentLevel)"
+            
+            let congratsLevelUpLabel = generateDefaultGameSceneLabel(text: "Level Up!", fontSize: 36)
+            addChild(congratsLevelUpLabel)
+            let fadeOut = SKAction.fadeOut(withDuration: 2.0)
+            let remove = SKAction.removeFromParent()
+            congratsLevelUpLabel.run(SKAction.sequence([fadeOut, remove]))
+            
+//            let levelUpLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+//            levelUpLabel.text = "Level \(currentLevel)"
+//            levelUpLabel.fontSize = 36
+//            levelUpLabel.fontColor = .black
+//            levelUpLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
+//            levelUpLabel.zPosition = 1000
+//            
+//            addChild(levelUpLabel)
+//            
+//            let fadeOut = SKAction.fadeOut(withDuration: 2.0)
+//            let remove = SKAction.removeFromParent()
+//            levelUpLabel.run(SKAction.sequence([fadeOut, remove]))
+            
+            generateFoodSourcesToolbar()
         }
+    }
 }

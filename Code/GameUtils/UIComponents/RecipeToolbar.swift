@@ -26,7 +26,7 @@ extension GameScene {
         if generatedLabel == nil {
             generatedLabel = generateDefaultGameSceneLabel(text: "",
                                                            fontSize: 20,
-                                                           position: CGPoint(x: tileMapMinX(), y: tileMapMinY())
+                                                           position: CGPoint(x: tileMapMinX(), y: -tileMapMinY() - 50)
             )
             generatedLabel?.name = "recipeLabel"
         }
@@ -121,7 +121,8 @@ struct RecipeInstructionView: View {
     
     var body: some View {
         VStack {
-            TabView {
+//            TabView {
+            ScrollView {
                 ForEach(foodItem, id: \.self) { item in
                     VStack{
                         HStack {
@@ -139,6 +140,7 @@ struct RecipeInstructionView: View {
                         Spacer()
                     }.frame(maxWidth: .infinity)
                 }
+                //            }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             .onAppear() {

@@ -10,13 +10,44 @@ import SpriteKit
 
 extension GameScene : TutorialSceneControl {
     var foodCategory: FoodOrderCategory {
-        currentLevel == 1 ? .Steak : .All
+        switch currentLevel {
+        case 1:
+            return .Steak
+        case 2:
+            return .Sushi
+        case let x where x >= 3:
+            return .All
+        default:
+            fatalError("Invalid level")
+        }
     }
     
     func startTutorialPhase() {
         inTutorialPhase = true
         stopAllCustomerTimers()
         removeAllFoodItemsFromScene()
+        
+        let tutorialPhaseLabel = generateDefaultGameSceneLabel(
+            text: "Tutorial Phase",
+            fontSize: 20,
+            position: .init(x: -tileMap.frame.width / 4, y: -tileMap.frame.height / 2 - 30)
+        )
+        
+        tutorialPhaseLabel.zPosition = 10
+        addChild(tutorialPhaseLabel)
+        
+        tutorialPhaseLabel.name = "TutorialPhaseLabel"
+        
+        let skipButton = generateDefaultGameSceneLabel(
+            text: "Skip",
+            fontSize: 20,
+            position: .init(x: tileMap.frame.width / 4, y: -tileMap.frame.height / 2 - 30)
+        )
+        
+        skipButton.zPosition = 10
+        addChild(skipButton)
+        
+        skipButton.name = "SkipButton"
     }
     
     var showTutorialIndicator: Bool {
@@ -29,6 +60,12 @@ extension GameScene : TutorialSceneControl {
         removeAllFoodItemsFromScene()
         clearHighlights()
         updateCurrentRecipeInstructions()
+        
+        children.forEach { child in
+            if child.name == "TutorialPhaseLabel" || child.name == "SkipButton" {
+                child.removeFromParent()
+            }
+        }
         
         // Show brief Congrats message
         let messageLine1 = generateDefaultGameSceneLabel(

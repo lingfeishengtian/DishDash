@@ -75,6 +75,10 @@ extension TutorialSceneControl {
     func initiateTutorial() {
         tutorialActionSequence = foodCategory.tutorialSequence
         currentTutorialPhase = tutorialActionSequence.first
+        if tutorialActionSequence.isEmpty {
+            endTutorialPhase()
+            return
+        }
         tutorialActionSequence.removeFirst()
         
         if let nextAction = currentTutorialPhase {
