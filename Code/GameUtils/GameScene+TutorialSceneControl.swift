@@ -10,7 +10,7 @@ import SpriteKit
 
 extension GameScene : TutorialSceneControl {
     var foodCategory: FoodOrderCategory {
-        currentLevel == 1 ? .Steak : .All
+        .All
     }
     
     func startTutorialPhase() {

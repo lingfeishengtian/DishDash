@@ -61,10 +61,10 @@ extension GameScene {
                 }
             }
             
-//            if customer.parent != nil && showTutorialIndicator && tutorialActionSequence.isEmpty && !inTutorialPhase {
-//                tutorialActionSequence = customer.order.tutorialSequence
-//                initiateTutorial()
-//            }
+            if customer.parent != nil && showTutorialIndicator && tutorialActionSequence.isEmpty && !inTutorialPhase {
+                tutorialActionSequence = customer.order.tutorialSequence
+                initiateTutorial()
+            }
             
             return true
         }
