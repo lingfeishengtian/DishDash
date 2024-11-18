@@ -19,14 +19,15 @@ fileprivate let numCustomersBeforeTimeLimitSpike: Int = 2
 
 extension GameScene {
     func stopAllCustomerTimers() {
-        customerGeneratorTimer?.invalidate()
+        customerGeneratorTimer?.stop()
+        
         for customer in customersAtTables {
-            customer.stopCountdown()
+            customer.stopTimer()
             customer.removeFromParent()
         }
         
         for customer in queuedCustomersOutside {
-            customer.stopCountdown()
+            customer.stopTimer()
             customer.removeFromParent()
         }
         
@@ -35,9 +36,13 @@ extension GameScene {
     }
     
     func startNewCustomerTimer() {
-        customerGeneratorTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timeIntervalBasedOnDifficulty()), repeats: false) { [weak self] _ in
+        customerGeneratorTimer = PausableTimer(time: timeIntervalBasedOnDifficulty(), tickTime: 0.01) { [weak self] tick in
+            guard let self = self else { return }
+            changeTimeTillNextCustomerLabel(to: tick)
+        } onCompletion: { [weak self] in
             self?.addCustomer()
         }
+        customerGeneratorTimer?.start()
         clearHighlights()
     }
     

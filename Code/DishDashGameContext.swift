@@ -10,7 +10,7 @@ import SpriteKit
 import SwiftUI
 
 class DishDashGameContext: GameContext {
-    let shouldBeginTutorial: Bool = true
+    let shouldBeginTutorial: Bool = false
     
     override init(dependencies deps: Dependencies) {
         super.init(dependencies: deps)

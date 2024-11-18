@@ -10,7 +10,6 @@ import os
 class Customer: DDEntity {
     var order: FoodItem
     private var seconds: Int
-    private var waitingTimer: Timer?
     private var orderLabel: SKLabelNode!
     private var onPatienceRunOut: (() -> Void)
     internal let logger = Logger(subsystem: "com.hunterhan.DishDash", category: "Customer")
@@ -52,34 +51,28 @@ class Customer: DDEntity {
             return
         }
         
-        waitingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            guard let self = self else { return }
-            self.seconds -= 1
-            
-            if self.seconds <= 0 {
-                onPatienceRunOut()
-                timer.invalidate()
-            } else {
-                logger.info("\(self.seconds) seconds left for customer")
-            }
+//        waitingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+//            guard let self = self else { return }
+//            self.seconds -= 1
+//            
+//            if self.seconds <= 0 {
+//                onPatienceRunOut()
+//                timer.invalidate()
+//            } else {
+//                logger.info("\(self.seconds) seconds left for customer")
+//            }
+//        }
+//        internalTimer?.start()
+//        createTimerGuage(time: seconds)
+        
+        startTimer(withSeconds: seconds) {
+            self.onPatienceRunOut()
         }
-        createTimerGuage(time: seconds)
-    }
-    
-    func stopCountdown() {
-        waitingTimer?.invalidate()
-        waitingTimer = nil
     }
     
     private func served() {
-        waitingTimer?.invalidate()
-        waitingTimer = nil
+        stopTimer()
     }
-    
-    deinit {
-        waitingTimer?.invalidate()
-    }
-    
 }
 
 // MARK - UI Element creation helper

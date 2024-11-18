@@ -18,7 +18,6 @@ class Food: DDEntity {
         }
     }
     private var cookingStage: Int = 0
-    private var cookingTimer: Timer?
     private var portionLabel: SKLabelNode?
     
     /// When this item is reached, stop cooking
@@ -40,14 +39,21 @@ class Food: DDEntity {
     
     func startCooking() {
         if let (stoveOperation, resultingFoodItem) = Recipe.stoveOperation(for: foodIdentifier) {
-            cookingTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(stoveOperation.timeNeeded), repeats: false) { [weak self] _ in
+//            cookingTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(stoveOperation.timeNeeded), repeats: false) { [weak self] _ in
+//                // Notify tutorial that food is cooked
+//                if let parent = self?.parent as? GameScene, let self {
+//                    parent.onAction(tutorialAction: .cook(self.foodIdentifier))
+//                }
+//                self?.updateFoodItem(foodItem: resultingFoodItem, shouldCook: self?.foodIdentifier != self?.cookOverride)
+//            }
+//            createTimerGuage(time: stoveOperation.timeNeeded)
+            startTimer(withSeconds: stoveOperation.timeNeeded) {
                 // Notify tutorial that food is cooked
-                if let parent = self?.parent as? GameScene, let self {
+                if let parent = self.parent as? GameScene {
                     parent.onAction(tutorialAction: .cook(self.foodIdentifier))
                 }
-                self?.updateFoodItem(foodItem: resultingFoodItem, shouldCook: self?.foodIdentifier != self?.cookOverride)
+                self.updateFoodItem(foodItem: resultingFoodItem, shouldCook: self.foodIdentifier != self.cookOverride)
             }
-            createTimerGuage(time: stoveOperation.timeNeeded)
         }
     }
     
@@ -73,9 +79,10 @@ class Food: DDEntity {
     }
     
     func stopCooking() {
-        removeTimerGuage()
-        cookingTimer?.invalidate()
-        cookingTimer = nil
+//        removeTimerGuage()
+//        cookingTimer?.invalidate()
+//        cookingTimer = nil
+        stopTimer()
     }
     
     func sinkEvent() {

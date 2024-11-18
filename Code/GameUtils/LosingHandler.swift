@@ -42,6 +42,8 @@ extension GameScene {
     func restartGame() {
         score = 0
         scoreLabel.text = "Score: \(score)"
+        levelLabel.text = "Level: 1"
+        currentLevel = 1
         customersSinceStart = 0
         
         background.removeFromParent()

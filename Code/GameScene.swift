@@ -23,7 +23,7 @@ class GameScene: SKScene {
     //var scoreLabel: SKLabelNode!
     var customers: [Customer] = []
     
-    var customerGeneratorTimer: Timer?
+    var customerGeneratorTimer: PausableTimer?
     
     var cuttingTimer: Timer?
     var portionTimer: Timer?
@@ -59,6 +59,7 @@ class GameScene: SKScene {
         }
     }
     var levelLabel: SKLabelNode!
+    var timeTillNextCustomerLabel: SKLabelNode!
     let sizeOfFoodSprites: CGSize = CGSize(width: 50, height: 50)
     
     override func sceneDidLoad() {
@@ -95,7 +96,14 @@ class GameScene: SKScene {
         if atPoint(location).name == "RestartButton" {
             restartGame()
         } else if atPoint(location).name == "RecipeBook" {
-            self.view?.window?.rootViewController?.present(UIHostingController(rootView: RecipeInstructionView(foodItem: foodCategory.orderableItems)), animated: true)
+            let dismissingViewController = DismissReportingViewController(rootView: RecipeInstructionView(foodItem: foodCategory.orderableItems))
+            dismissingViewController.onDismiss = {
+                self.resumeGame()
+            }
+            dismissingViewController.onAppear = {
+                self.pauseGame()
+            }
+            self.view?.window?.rootViewController?.present(dismissingViewController, animated: true)
         }
         
         if let nameSource = atPoint(location).name, nameSource.hasPrefix("FoodSource"), let foodRawValue = Int(nameSource.dropFirst("FoodSource".count)), let foodItem = FoodItem(rawValue: foodRawValue) {
@@ -128,7 +136,7 @@ class GameScene: SKScene {
         if tileMap.frame.contains(touch.location(in: self)) {
             cuttingTimer?.invalidate()
             portionTimer?.invalidate()
-            draggedFood.removeTimerGuage()
+            draggedFood.stopCooking()
             
             let itemsToFireEvents = setFoodItemDown(draggedFood, at: tilePosition)
             itemsToFireEvents.forEach { item in
@@ -151,14 +159,25 @@ class GameScene: SKScene {
         scoreLabel.zPosition = 10
         addChild(scoreLabel)
         
-        let levelLabel = SKLabelNode(fontNamed: "Helvetica")
+        levelLabel = SKLabelNode(fontNamed: "Helvetica")
         levelLabel.text = "Level: \(currentLevel)"
         levelLabel.fontSize = 24
         levelLabel.fontColor = .white
-        levelLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 150)
+        levelLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 120)
         levelLabel.zPosition = 10
-        self.levelLabel = levelLabel
         addChild(levelLabel)
+        
+        timeTillNextCustomerLabel = SKLabelNode(fontNamed: "Helvetica")
+        timeTillNextCustomerLabel.text = "Next customer: 0"
+        timeTillNextCustomerLabel.fontSize = 24
+        timeTillNextCustomerLabel.fontColor = .white
+        timeTillNextCustomerLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 140)
+        timeTillNextCustomerLabel.zPosition = 10
+        addChild(timeTillNextCustomerLabel)
+    }
+    
+    func changeTimeTillNextCustomerLabel(to time: Double) {
+        timeTillNextCustomerLabel.text = "Next customer: \(time.formatted(.number.precision(.fractionLength(2))))"
     }
     
     func incrementScore(by points: Int) {
