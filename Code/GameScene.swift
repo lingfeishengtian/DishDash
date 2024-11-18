@@ -32,6 +32,7 @@ class GameScene: SKScene {
     var tutorialActionSequence: [TutorialAction] = []
     var currentTutorialPhase: TutorialAction? = nil
     var shouldBeginTutorial: Bool = true
+    var currentLevel: Int = 1
     
     convenience init(gameContext: DishDashGameContext, shouldBeginTutorial: Bool) {
         self.init(fileNamed: "DishDashGameScene")!
@@ -55,7 +56,7 @@ class GameScene: SKScene {
             scoreLabel.text = "Score: \(score)"
         }
     }
-    
+    var levelLabel: SKLabelNode!
     let sizeOfFoodSprites: CGSize = CGSize(width: 50, height: 50)
     
     override func sceneDidLoad() {
@@ -66,7 +67,6 @@ class GameScene: SKScene {
         startNewCustomerTimer()
         generateFoodSourcesToolbar()
         setupRecipeToolbar()
-        
 #if DEBUG
         drawDebugTiles()
 #endif
@@ -145,9 +145,36 @@ class GameScene: SKScene {
         scoreLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 100)
         scoreLabel.zPosition = 10
         addChild(scoreLabel)
+        
+        let levelLabel = SKLabelNode(fontNamed: "Helvetica")
+        levelLabel.text = "Level: \(currentLevel)"
+        levelLabel.fontSize = 24
+        levelLabel.fontColor = .white
+        levelLabel.position = CGPoint(x: self.frame.minX + 100, y: self.frame.maxY - 150)
+        levelLabel.zPosition = 10
+        self.levelLabel = levelLabel
+        addChild(levelLabel)
     }
     
     func incrementScore(by points: Int) {
         score += points
-    }
+        let pointsThresholdForNextLevel =  5 + (currentLevel - 1) * 10
+            if score >= pointsThresholdForNextLevel {
+                currentLevel += 1
+                levelLabel.text = "Level: \(currentLevel)"
+
+                let levelUpLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+                levelUpLabel.text = "Level \(currentLevel)"
+                levelUpLabel.fontSize = 36
+                levelUpLabel.fontColor = .black
+                levelUpLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
+                levelUpLabel.zPosition = 1000
+
+                addChild(levelUpLabel)
+
+                let fadeOut = SKAction.fadeOut(withDuration: 2.0)
+                let remove = SKAction.removeFromParent()
+                levelUpLabel.run(SKAction.sequence([fadeOut, remove]))
+            }
+        }
 }
