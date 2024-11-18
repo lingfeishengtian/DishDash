@@ -170,9 +170,9 @@ enum FoodItem: Int, CaseIterable {
         case .Rice:
             return "Raw Rice"
         case .WholeFish:
-            return "WholeFish"
+            return "Whole Fish"
         case .SlicedFish:
-            return "SlicedFish"
+            return "Sliced Fish"
 //        case .Sashimi:
 //            return "Sashimi"
         case .Nigiri:
@@ -181,6 +181,51 @@ enum FoodItem: Int, CaseIterable {
             return "Knife"
         case .Riceball:
             return "Riceball"
+        }
+    }
+    
+    var tutorialSequence: [TutorialAction] {
+        switch self {
+        case .SteakRare:
+            return [
+                .grabSourceToTile(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .serve(.SteakRare)
+            ]
+        case .SteakMedium:
+            return [
+                .grabSourceToTile(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .cook(.SteakRare),
+                .serve(.SteakMedium)
+            ]
+        case .SteakBurnt:
+            return [
+                .grabSourceToTile(.SteakRaw, .machine),
+                .cook(.SteakRaw),
+                .cook(.SteakRare),
+                .cook(.SteakMedium),
+                .serve(.SteakBurnt)
+            ]
+        case .SlicedFish:
+            return [
+                .grabSourceToTile(.WholeFish, .counter),
+                .grabSourceToFoodItem(.Knife, .WholeFish),
+                .serve(.SlicedFish)
+            ]
+        case .Nigiri:
+            return [
+                .grabSourceToTile(.WholeFish, .counter),
+                .grabSourceToFoodItem(.Knife, .WholeFish),
+                .grabSourceToTile(.Pot, .sink),
+                .grabSourceToFoodItem(.Rice, .PotWater),
+                .action(.PotRawRiceWater, .machine),
+                .cook(.PotRawRiceWater),
+                .combine(.PotCookedRice, .SlicedFish),
+                .serve(.Nigiri)
+            ]
+        default:
+            return []
         }
     }
 }

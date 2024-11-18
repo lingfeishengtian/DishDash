@@ -7,13 +7,17 @@
 
 import Foundation
 
-enum TutorialAction: Equatable {
+enum TutorialAction: Equatable, Hashable, Identifiable {
     case combine(FoodItem, FoodItem)
     case grabSourceToTile(FoodItem, TileType)
     case grabSourceToFoodItem(FoodItem, FoodItem)
     case action(FoodItem, TileType)
     case cook(FoodItem)
     case serve(FoodItem)
+    
+    var id: String {
+        return self.description
+    }
     
     static func == (lhs: TutorialAction, rhs: TutorialAction) -> Bool {
         switch (lhs, rhs) {
@@ -33,9 +37,23 @@ enum TutorialAction: Equatable {
             return false
         }
     }
+    
+    var description: String {
+        switch self {
+        case .combine(let food1, let food2), .grabSourceToFoodItem(let food1, let food2):
+            return "Combine \(food1.description) with \(food2.description)"
+        case .grabSourceToTile(let food, let tile), .action(let food, let tile):
+            return "Grab \(food.description) to \(tile)"
+        case .cook(let food):
+            return "Wait for \(food.description) to cook"
+        case .serve(let food):
+            return "Grab \(food.description) and serve to customer"
+        }
+    }
 }
 
 protocol TutorialSceneControl: AnyObject {
+    var inTutorialPhase: Bool { get set }
     var foodCategory: FoodOrderCategory { get }
     var tutorialActionSequence: [TutorialAction] { get set }
     var currentTutorialPhase: TutorialAction? { get set }
@@ -55,7 +73,6 @@ protocol TutorialSceneControl: AnyObject {
 
 extension TutorialSceneControl {
     func initiateTutorial() {
-        startTutorialPhase()
         tutorialActionSequence = foodCategory.tutorialSequence
         currentTutorialPhase = tutorialActionSequence.first
         tutorialActionSequence.removeFirst()
@@ -83,7 +100,9 @@ extension TutorialSceneControl {
             } else {
                 clearHighlights()
                 currentTutorialPhase = nil
-                endTutorialPhase()
+                if inTutorialPhase {
+                    endTutorialPhase()
+                }
             }
         }
     }

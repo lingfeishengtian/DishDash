@@ -8,6 +8,7 @@
 import SpriteKit
 import GameplayKit
 import os
+import SwiftUI
 
 class GameScene: SKScene {
     /// Assume gameContext will always be set by GameContext creating it
@@ -33,6 +34,7 @@ class GameScene: SKScene {
     var currentTutorialPhase: TutorialAction? = nil
     var shouldBeginTutorial: Bool = true
     var currentLevel: Int = 1
+    var inTutorialPhase: Bool = false
     
     convenience init(gameContext: DishDashGameContext, shouldBeginTutorial: Bool) {
         self.init(fileNamed: "DishDashGameScene")!
@@ -76,6 +78,7 @@ class GameScene: SKScene {
         super.didMove(to: view)
         setupScoreLabel()
         if shouldBeginTutorial {
+            startTutorialPhase()
             initiateTutorial()
         }
     }
@@ -91,6 +94,8 @@ class GameScene: SKScene {
         
         if atPoint(location).name == "RestartButton" {
             restartGame()
+        } else if atPoint(location).name == "RecipeBook" {
+            self.view?.window?.rootViewController?.present(UIHostingController(rootView: RecipeInstructionView(foodItem: foodCategory.orderableItems)), animated: true)
         }
         
         if let nameSource = atPoint(location).name, nameSource.hasPrefix("FoodSource"), let foodRawValue = Int(nameSource.dropFirst("FoodSource".count)), let foodItem = FoodItem(rawValue: foodRawValue) {
